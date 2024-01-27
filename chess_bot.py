@@ -173,8 +173,9 @@ def play_random_game(model):
 
     board = chess.Board()
     MOVE = 0
+    max_turns = 100
 
-    while not board.is_game_over():
+    while not board.is_game_over and MOVE < max_turns():
         #print("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         #print("~~~~~~~~~~~~~             MOVE " + str(MOVE) + "                 ~~~~~~~~~~~~~~~~")
         #print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
