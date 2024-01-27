@@ -102,53 +102,59 @@ def get_random_move(board):
 # White is the neural network bot, and black is the random bot
 def play_random_game():
     global MOVE
-    board = chess.Board()
-    
 
-    while not board.is_game_over():
-        print("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print("~~~~~~~~~~~~~             MOVE " + str(MOVE) +"                 ~~~~~~~~~~~~~~~~")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
+    while True:  # Outer loop to start a new game each time the current game ends
+        board = chess.Board()
+        MOVE = 0
 
-        print("\nCURRENT STATE OF THE BOARD\n")
-        print_board(board)
-        print("\nWHITE'S TURN" if board.turn else "\nBLACK'S TURN")
+        while not board.is_game_over():
+            print("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            print("~~~~~~~~~~~~~             MOVE " + str(MOVE) +"                 ~~~~~~~~~~~~~~~~")
+            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
 
-        legal_moves = list(board.legal_moves)
-        print("\nPOSSIBLE MOVES:", ", ".join(map(str, legal_moves)))
-        
-        if(board.turn == chess.WHITE):
-            is_white_turn = True
-            evaluation_scores = []
-            for i in range(len(legal_moves)):
-                possible_move = legal_moves[i]
-                encoded_state = encode_game_state(board, possible_move, is_white_turn)
-                print("\n\nENCODED STATE: " + str(encoded_state))
+            print("\nCURRENT STATE OF THE BOARD\n")
+            print_board(board)
+            print("\nWHITE'S TURN" if board.turn else "\nBLACK'S TURN")
+
+            legal_moves = list(board.legal_moves)
+            print("\nPOSSIBLE MOVES:", ", ".join(map(str, legal_moves)))
+            
+            if board.turn == chess.WHITE:
+                is_white_turn = True
+                evaluation_scores = []
+                for possible_move in legal_moves:
+                    encoded_state = encode_game_state(board, possible_move, is_white_turn)
+                    print("\n\nENCODED STATE: " + str(encoded_state))
+
+                    evaluation = evaluate_position(encoded_state)
+                    evaluation_scores.append(evaluation)
+                    print("\nEvaluation of the position:", evaluation)
                 
+                chosen_index = choose_index_by_evaluation(evaluation_scores)
+                chosen_move = legal_moves[chosen_index]
+            else:
+                chosen_move = get_random_move(board)
 
-                evaluation = evaluate_position(encoded_state)
-                evaluation_scores.append(evaluation)
-                print("\nEvaluation of the position:", evaluation)
-            chosen_index = choose_index_by_evaluation(evaluation_scores)
-            chosen_move = legal_moves[chosen_index]
-        else:
-            chosen_move = get_random_move(board)
-        print("\nCHOSEN MOVE:", chosen_move)
+            print("\nCHOSEN MOVE:", chosen_move)
 
-        
+            board.push(chosen_move)
+            print("\nBOARD AFTER MOVE:")
+            print_board(board)
+            print("\n\n\n")
 
-        board.push(chosen_move)
-        print("\nBOARD AFTER MOVE:")
-        print_board(board)
-        print("\n\n\n")
+            if board.is_checkmate():
+                print("\nCHECKMATE!")
+            elif board.is_stalemate():
+                print("\nSTALEMATE!")
+            
+            #time.sleep(5)
+            MOVE += 1
 
-        if board.is_checkmate():
-            print("\nCHECKMATE!")
-        elif board.is_stalemate():
-            print("\nSTALEMATE!")
-        
-        time.sleep(5)
-        MOVE += 1
+        print("\nGame Over. Starting a new game...\n")
+        #time.sleep(3)  # Optional pause before the next game starts
+
+if __name__ == "__main__":
+    play_random_game()
 
 
 if __name__ == "__main__":
