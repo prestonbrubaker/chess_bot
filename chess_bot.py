@@ -146,6 +146,8 @@ def evaluate_fitness(model, number_of_games):
     fitness = total_score / number_of_games
     return fitness
 
+
+
 def piece_value(piece):
     """Returns the value of a chess piece."""
     if piece is None:
@@ -209,6 +211,9 @@ def play_random_game(model):
         #print("\nBOARD AFTER MOVE:")
         #print_board(board)
         #print("\n\n\n")
+
+        white_score, black_score = calculate_material_score(board)
+        
         MOVE += 1
 
     # Calculate the score on the board
