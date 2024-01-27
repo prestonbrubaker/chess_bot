@@ -228,7 +228,9 @@ def mutate_model(model):
             # Choose a single random weight to mutate
             chosen_param = random.choice([p for p in new_model.parameters() if p.numel() > 0])
             random_idx = tuple(random.randint(0, dim - 1) for dim in chosen_param.shape)
-            chosen_param[random_idx] += torch.randn(1) * 0.1 * magnitude
+            random_change = torch.randn(1).item() * 0.1 * magnitude  # Convert to scalar
+            chosen_param[random_idx] += random_change
+
 
         elif mutation_strategy == "probabilistic":
             for param in new_model.parameters():
