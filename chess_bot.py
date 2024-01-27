@@ -139,7 +139,7 @@ def evaluate_fitness(model, number_of_games=10):
 
 
 # White is the neural network bot, and black is the random bot
-def play_random_game():
+def play_random_game(model):
     global MOVE
 
     board = chess.Board()
