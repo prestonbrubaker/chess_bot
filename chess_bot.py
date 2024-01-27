@@ -26,6 +26,7 @@ class ChessNN(nn.Module):
 model = ChessNN()
 
 MOVE = 0
+GAME = 0
 
 def evaluate_position(encoded_state):
     # Convert the encoded state to a PyTorch tensor
@@ -102,6 +103,7 @@ def get_random_move(board):
 # White is the neural network bot, and black is the random bot
 def play_random_game():
     global MOVE
+    global GAME
 
     while True:  # Outer loop to start a new game each time the current game ends
         board = chess.Board()
@@ -150,8 +152,9 @@ def play_random_game():
             #time.sleep(5)
             MOVE += 1
 
-        print("\nGame Over. Starting a new game...\n")
+        print("\nGAME OVER. MOVING ON TO GAME" + str(GAME) + "\n")
         #time.sleep(3)  # Optional pause before the next game starts
+        GAME += 1
 
 if __name__ == "__main__":
     play_random_game()
