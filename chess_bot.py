@@ -82,7 +82,7 @@ def play_random_game():
                 chosen_move = get_random_move(board)
         else:
             chosen_move = get_random_move(board)
-        print("Chosen move:", chosen_move)
+        print("ChOSEN MOVE:", chosen_move)
 
         
 
@@ -92,9 +92,9 @@ def play_random_game():
         print("\n\n\n")
 
         if board.is_checkmate():
-            print("Checkmate!")
+            print("CHECKMATE!")
         elif board.is_stalemate():
-            print("Stalemate!")
+            print("STALEMATE!")
         
         time.sleep(5)
         MOVE += 1
