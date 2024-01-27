@@ -65,9 +65,10 @@ def play_random_game():
         print("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print("~~~~~~~~~~~~~             MOVE " + str(MOVE) +"                 ~~~~~~~~~~~~~~~~")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
-        
+
+        print("CURRENT STATE OF THE BOARD\n")
         print_board(board)
-        print("White's turn" if board.turn else "Black's turn")
+        print("WHITE'S TURN" if board.turn else "BLACK'S TURN")
 
         legal_moves = list(board.legal_moves)
         print("Possible moves:", ", ".join(map(str, legal_moves)))
@@ -86,7 +87,7 @@ def play_random_game():
         
 
         board.push(chosen_move)
-        print("Board after move:")
+        print("BOARD AFTER MOVE:")
         print_board(board)
         print("\n\n\n")
 
