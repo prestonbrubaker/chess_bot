@@ -145,8 +145,9 @@ def evaluate_fitness(model, number_of_games=10):
             white_wins += 1
         elif winner == "Black":
             black_wins += 1
-
-    return (white_wins - black_wins) / number_of_games
+    fitness = (white_wins - black_wins) / number_of_games
+    print("        fitness: " + str(fitness) + " ")
+    return fitness
 
 
 
