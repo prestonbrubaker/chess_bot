@@ -1,5 +1,6 @@
 import chess
 import random
+import time
 
 def print_board(board):
     """Prints the chess board in a simple text format."""
@@ -40,6 +41,7 @@ def play_random_game():
             print("Checkmate!")
         elif board.is_stalemate():
             print("Stalemate!")
+        time.sleep(5)
 
 if __name__ == "__main__":
     play_random_game()
