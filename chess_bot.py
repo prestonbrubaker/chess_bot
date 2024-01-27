@@ -99,6 +99,26 @@ def get_random_move(board):
     """Returns a random legal move for the current player."""
     return random.choice(list(board.legal_moves))
 
+def run_multiple_games(number_of_games):
+    white_wins = 0
+    black_wins = 0
+    draws = 0
+
+    for game in range(number_of_games):
+        winner = play_random_game()
+        print("\nGAME", game, "OVER. Winner:", winner)
+
+        if winner == "White":
+            white_wins += 1
+        elif winner == "Black":
+            black_wins += 1
+        elif winner == "Draw":
+            draws += 1
+
+    print("\nFinal Results after", number_of_games, "games:")
+    print("White wins:", white_wins)
+    print("Black wins:", black_wins)
+    print("Draws:", draws)
 
 # White is the neural network bot, and black is the random bot
 def play_random_game():
@@ -156,10 +176,4 @@ def play_random_game():
 
 
 if __name__ == "__main__":
-    GAME = 0
-    while True:
-        winner = play_random_game()
-        print("\nGAME OVER. Winner: " + winner)
-        print("MOVING ON TO GAME", GAME, "\n")
-        # Optional pause or additional logic
-        GAME += 1
+    run_multiple_games(10)
