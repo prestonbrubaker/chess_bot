@@ -240,7 +240,7 @@ def evolve_models(initial_model, generations, number_of_games):
         # Evaluate the current best model
         fitness = evaluate_fitness(best_model, number_of_games)
         print(f"Current best fitness: {fitness}")
-        with open(fitness_log.txt, 'a') as file:
+        with open("fitness_log.txt", 'a') as file:
             file.write("gen" + str(gen) + "fitness" + str(fitness) + "\n")
 
         # If the new model is better, update the best model
