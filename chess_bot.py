@@ -237,7 +237,9 @@ def mutate_model(model):
                 change_probability = 1 / total_weights
                 for idx in np.ndindex(param.shape):
                     if random.random() < change_probability:
-                        param[idx] += torch.randn(1) * 0.1 * magnitude
+                        random_change = torch.randn(1).item() * 0.1 * magnitude  # Convert to scalar
+                        param[idx] += random_change
+
 
     return new_model
 
