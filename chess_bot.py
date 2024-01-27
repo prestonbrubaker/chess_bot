@@ -273,7 +273,7 @@ if __name__ == "__main__":
         print("No existing model found. Starting with a new model.")
         model = ChessNN()
 
-    generations = 100  # Number of generations to evolve
-    number_of_games = 1000    # Number of games played to evaluate fitness against random bot
+    generations = 100000  # Number of generations to evolve
+    number_of_games = 5    # Number of games played to evaluate fitness against random bot
     evolve_models(model, generations, number_of_games)
 
