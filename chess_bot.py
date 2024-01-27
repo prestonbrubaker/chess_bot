@@ -62,7 +62,8 @@ def play_random_game():
         legal_moves = list(board.legal_moves)
         print("Possible moves:", ", ".join(map(str, legal_moves)))
 
-        if(is_white_turn = board.turn == chess.WHITE):
+        if(board.turn == chess.WHITE):
+            is_white_turn = True
             for i in range(len(legal_moves))
                 possible_move = legal_moves[i]
                 encoded_state = encode_game_state(board, possible_move, is_white_turn)
