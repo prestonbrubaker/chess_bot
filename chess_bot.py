@@ -1,4 +1,5 @@
 import chess
+import random
 
 def print_board(board):
     """Prints the chess board in a simple text format."""
