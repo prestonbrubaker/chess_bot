@@ -273,9 +273,6 @@ def evolve_models(initial_model, generations, number_of_games):
         
         # Create a new model by mutating the best model
         best_model = mutate_model(best_model)
-    
-        # Save the model
-        save_model(best_model, gen + 1)
 
 def save_model(model, generation):
     directory = "models"
