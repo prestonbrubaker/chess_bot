@@ -81,7 +81,18 @@ def encode_game_state(board, move, is_white_turn):
     return board_state + turn + encoded_move
 
 
+def choose_index_by_evaluation(evaluation_scores):
+    total = sum(evaluation_scores)
+    if total == 0:
+        # If all scores are zero, choose randomly
+        return random.randint(0, len(evaluation_scores) - 1)
 
+    # Normalize scores to sum to 1 (if not already)
+    normalized_scores = [score / total for score in evaluation_scores]
+
+    # Choose an index based on these normalized weights
+    chosen_index = random.choices(range(len(evaluation_scores)), weights=normalized_scores, k=1)[0]
+    return chosen_index
 
 def get_random_move(board):
     """Returns a random legal move for the current player."""
@@ -105,17 +116,21 @@ def play_random_game():
 
         legal_moves = list(board.legal_moves)
         print("\nPOSSIBLE MOVES:", ", ".join(map(str, legal_moves)))
-
+        
         if(board.turn == chess.WHITE):
             is_white_turn = True
+            evaluation_score = []
             for i in range(len(legal_moves)):
                 possible_move = legal_moves[i]
                 encoded_state = encode_game_state(board, possible_move, is_white_turn)
                 print("\n\nENCODED STATE: " + str(encoded_state))
-                chosen_move = get_random_move(board)
+                
 
                 evaluation = evaluate_position(encoded_state)
+                evaluation_score.append(evaluation)
                 print("\nEvaluation of the position:", evaluation)
+            chosen_index = choose_index_by_evaluation(evaluation_scores)
+            chosen_move = legal_moves[chosen_index]
         else:
             chosen_move = get_random_move(board)
         print("\nCHOSEN MOVE:", chosen_move)
