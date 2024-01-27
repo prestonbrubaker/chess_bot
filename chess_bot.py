@@ -57,7 +57,9 @@ def get_random_move(board):
 
 # White is the neural network bot, and black is the random bot
 def play_random_game():
+    global MOVE
     board = chess.Board()
+    
 
     while not board.is_game_over():
         print("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
