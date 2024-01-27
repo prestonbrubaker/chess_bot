@@ -119,7 +119,7 @@ def play_random_game():
         
         if(board.turn == chess.WHITE):
             is_white_turn = True
-            evaluation_score = []
+            evaluation_scores = []
             for i in range(len(legal_moves)):
                 possible_move = legal_moves[i]
                 encoded_state = encode_game_state(board, possible_move, is_white_turn)
@@ -127,7 +127,7 @@ def play_random_game():
                 
 
                 evaluation = evaluate_position(encoded_state)
-                evaluation_score.append(evaluation)
+                evaluation_scores.append(evaluation)
                 print("\nEvaluation of the position:", evaluation)
             chosen_index = choose_index_by_evaluation(evaluation_scores)
             chosen_move = legal_moves[chosen_index]
