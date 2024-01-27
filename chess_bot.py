@@ -142,7 +142,8 @@ def evaluate_fitness(model, number_of_games):
             white_wins += 1
         elif winner == "Black":
             black_wins += 1
-    fitness = (white_wins - black_wins) / number_of_games
+    #fitness = (white_wins - black_wins) / number_of_games
+    fitness = white_wins / number_of_games
     return fitness
 
 
@@ -258,14 +259,17 @@ def evolve_models(initial_model, generations, number_of_games):
 
         # Evaluate the current best model
         fitness = evaluate_fitness(best_model, number_of_games)
-        print(f"Current best fitness: {fitness}")
-        with open("fitness_log.txt", 'a') as file:
-            file.write("gen " + str(gen) + " fitness " + str(fitness) + "\n")
+        
 
         # If the new model is better, update the best model
         if fitness > best_fitness:
             best_fitness = fitness
             save_model(best_model, gen)
+        
+        print(f"Fitness: {fitness} Current best fitness: {best_fitness}")
+        with open("fitness_log.txt", 'a') as file:
+            file.write("gen " + str(gen) + " fitness " + str(fitness) + " best " + str(best_fitness) + \n")
+
         
         # Create a new model by mutating the best model
         best_model = mutate_model(best_model)
