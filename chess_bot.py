@@ -133,20 +133,38 @@ def run_multiple_games(number_of_games):
 
 
 def evaluate_fitness(model, number_of_games):
-    white_wins = 0
-    black_wins = 0
+    total_score = 0
 
     for _ in range(number_of_games):
-        winner = play_random_game(model)
+        winner, white_score, black_score = play_random_game(model)
+        score_difference = white_score - black_score
         if winner == "White":
-            white_wins += 1
-        elif winner == "Black":
-            black_wins += 1
-    #fitness = (white_wins - black_wins) / number_of_games
-    fitness = white_wins / number_of_games
+            total_score += score_difference + 20
+        else:
+            total_score += score_difference
+
+    fitness = total_score / number_of_games
     return fitness
 
+def piece_value(piece):
+    """Returns the value of a chess piece."""
+    if piece is None:
+        return 0
+    value_dict = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK: 5, chess.QUEEN: 9, chess.KING: 0}
+    return value_dict[piece.piece_type]
 
+def calculate_material_score(board):
+    """Calculates and returns the material score for White and Black."""
+    white_score = 0
+    black_score = 0
+    for i in range(64):
+        piece = board.piece_at(i)
+        if piece is not None:
+            if piece.color == chess.WHITE:
+                white_score += piece_value(piece)
+            else:
+                black_score += piece_value(piece)
+    return white_score, black_score
 
 
 # White is the neural network bot, and black is the random bot
@@ -192,6 +210,8 @@ def play_random_game(model):
         #print("\n\n\n")
         MOVE += 1
 
+    # Calculate the score on the board
+    white_score, black_score = calculate_material_score(board)
     # Determine the winner
     if board.is_checkmate():
         winner = "Black" if board.turn == chess.WHITE else "White"
@@ -200,7 +220,7 @@ def play_random_game(model):
     else:
         winner = "Game not finished"
 
-    return winner
+    return winner, white_score, black_score
 
 
 
