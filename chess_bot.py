@@ -268,7 +268,7 @@ def evolve_models(initial_model, generations, number_of_games):
         
         print(f"Fitness: {fitness} Current best fitness: {best_fitness}")
         with open("fitness_log.txt", 'a') as file:
-            file.write("gen " + str(gen) + " fitness " + str(fitness) + " best " + str(best_fitness) + \n")
+            file.write("gen " + str(gen) + " fitness " + str(fitness) + " best " + str(best_fitness) + "\n")
 
         
         # Create a new model by mutating the best model
