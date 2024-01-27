@@ -67,6 +67,8 @@ def play_random_game():
             for i in range(len(legal_moves)):
                 possible_move = legal_moves[i]
                 encoded_state = encode_game_state(board, possible_move, is_white_turn)
+                print("\n\nENCODED STATE: " + str(encoded_state))
+                chosen_move = get_random_move(board)
         else:
             chosen_move = get_random_move(board)
         print("Chosen move:", chosen_move)
