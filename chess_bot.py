@@ -71,7 +71,7 @@ def play_random_game():
         print("WHITE'S TURN" if board.turn else "BLACK'S TURN")
 
         legal_moves = list(board.legal_moves)
-        print("Possible moves:", ", ".join(map(str, legal_moves)))
+        print("\nPOSSIBLE MOVES:", ", ".join(map(str, legal_moves)))
 
         if(board.turn == chess.WHITE):
             is_white_turn = True
