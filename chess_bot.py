@@ -247,8 +247,8 @@ def evolve_models(initial_model, generations, number_of_games):
         # Create a new model by mutating the best model
         best_model = mutate_model(best_model)
     
-    # Save the final model
-    save_model(best_model, generations)
+        # Save the model
+        save_model(best_model, gen + 1)
 
 def save_model(model, generation):
     directory = "models"
@@ -272,6 +272,6 @@ if __name__ == "__main__":
         model = ChessNN()
 
     generations = 100  # Number of generations to evolve
-    number_of_games = 30    # Number of games played to evaluate fitness against random bot
+    number_of_games = 1000    # Number of games played to evaluate fitness against random bot
     evolve_models(model, generations, number_of_games)
 
