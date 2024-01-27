@@ -291,6 +291,6 @@ if __name__ == "__main__":
         model = ChessNN()
 
     generations = 100000  # Number of generations to evolve
-    number_of_games = 1000    # Number of games played to evaluate fitness against random bot
+    number_of_games = 20    # Number of games played to evaluate fitness against random bot
     evolve_models(model, generations, number_of_games)
 
