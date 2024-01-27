@@ -46,34 +46,44 @@ def encode_game_state(board, move, is_white_turn):
 
 
 
-def main():
+def get_random_move(board):
+    """Returns a random legal move for the current player."""
+    return random.choice(list(board.legal_moves))
+
+
+# White is the neural network bot, and black is the random bot
+def play_random_game():
     board = chess.Board()
-    print_board(board)
 
     while not board.is_game_over():
-        print("Enter your move in UCI format (e.g., e2e4):")
-        try:
-            move_uci = input().strip()
-            move = chess.Move.from_uci(move_uci)
+        print_board(board)
+        print("White's turn" if board.turn else "Black's turn")
 
-            is_white_turn = board.turn == chess.WHITE
-            encoded_state = encode_game_state(board, move, is_white_turn)
-            print("ENCODED STATE: " + str(encoded_state))
+        legal_moves = list(board.legal_moves)
+        print("Possible moves:", ", ".join(map(str, legal_moves)))
 
-            
-            if move not in board.legal_moves:
-                print("Illegal move. Try again.")
-                continue
+        if(is_white_turn = board.turn == chess.WHITE):
+            for i in range(len(legal_moves))
+                possible_move = legal_moves[i]
+                encoded_state = encode_game_state(board, possible_move, is_white_turn)
+        else:
+            chosen_move = get_random_move(board)
+        print("Chosen move:", chosen_move)
 
-            board.push(move)
-            print_board(board)
-
-        except ValueError:
-            print("Invalid input. Please enter a move in UCI format.")
         
-        except KeyboardInterrupt:
-            print("\nGame interrupted.")
-            break
+
+        board.push(chosen_move)
+        print("Board after move:")
+        print_board(board)
+        print("\n\n\n")
+
+        if board.is_checkmate():
+            print("Checkmate!")
+        elif board.is_stalemate():
+            print("Stalemate!")
+        
+        time.sleep(5)
+
 
 if __name__ == "__main__":
-    main()
+    play_random_game()
