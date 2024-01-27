@@ -2,7 +2,7 @@ import chess
 import random
 import time
 
-move = 0
+MOVE = 0
 
 def print_board(board):
     """Prints the chess board in a simple text format."""
@@ -61,7 +61,7 @@ def play_random_game():
 
     while not board.is_game_over():
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print("~~~~~~~~~~~~~             MOVE " + str(move) +"                 ~~~~~~~~~~~~~~~~")
+        print("~~~~~~~~~~~~~             MOVE " + str(MOVE) +"                 ~~~~~~~~~~~~~~~~")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         
         print_board(board)
