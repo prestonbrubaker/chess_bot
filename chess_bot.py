@@ -215,10 +215,12 @@ def mutate_model(model):
     # Copy weights from the old model
     new_model.load_state_dict(model.state_dict())
 
+    magnitude = 10 ** random.randint(-5,0)
+    
     with torch.no_grad():
         for param in new_model.parameters():
             # Apply a small random change to each weight
-            param.add_(torch.randn(param.size()) * 0.1)
+            param.add_(torch.randn(param.size()) * 0.1 * magnitude)
     
     return new_model
 
