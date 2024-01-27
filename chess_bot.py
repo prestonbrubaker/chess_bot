@@ -1,8 +1,41 @@
 import chess
 import random
 import time
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class ChessNN(nn.Module):
+    def __init__(self):
+        super(ChessNN, self).__init__()
+        self.fc1 = nn.Linear(267, 267)  # Input layer
+        self.fc2 = nn.Linear(267, 267)  # Hidden layer 1
+        self.fc3 = nn.Linear(267, 267)  # Hidden layer 2
+        self.fc4 = nn.Linear(267, 267)  # Hidden layer 3
+        self.fc5 = nn.Linear(267, 1)    # Output layer
+
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
+        x = F.relu(self.fc4(x))
+        x = torch.sigmoid(self.fc5(x))  # Sigmoid activation for output
+        return x
+
+# Create an instance of the ChessNN
+model = ChessNN()
 
 MOVE = 0
+
+def evaluate_position(encoded_state):
+    # Convert the encoded state to a PyTorch tensor
+    input_tensor = torch.FloatTensor(encoded_state).unsqueeze(0)  # Add batch dimension
+
+    # Feed the tensor into the neural network
+    output = model(input_tensor)
+
+    return output.item()  # Return the single output value as a Python number
+
 
 def print_board(board):
     """Prints the chess board in a simple text format."""
@@ -80,6 +113,9 @@ def play_random_game():
                 encoded_state = encode_game_state(board, possible_move, is_white_turn)
                 print("\n\nENCODED STATE: " + str(encoded_state))
                 chosen_move = get_random_move(board)
+
+                evaluation = evaluate_position(encoded_state)
+                print("\nEvaluation of the position:", evaluation)
         else:
             chosen_move = get_random_move(board)
         print("\nCHOSEN MOVE:", chosen_move)
