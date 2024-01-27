@@ -1,5 +1,6 @@
 import chess
 import random
+import time
 
 def print_board(board):
     """Prints the chess board in a simple text format."""
