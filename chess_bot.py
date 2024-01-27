@@ -23,6 +23,18 @@ class ChessNN(nn.Module):
         x = torch.sigmoid(self.fc5(x))  # Sigmoid activation for output
         return x
 
+
+
+def find_most_recent_model(directory):
+    model_files = [f for f in os.listdir(directory) if f.endswith('.pth')]
+    if not model_files:
+        return None
+    
+    # Assuming the file format is 'model_gen_X.pth', where X is the generation number
+    latest_model = max(model_files, key=lambda x: int(x.split('_')[2].split('.')[0]))
+    return os.path.join(directory, latest_model)
+
+
 # Create an instance of the ChessNN
 model = ChessNN()
 
@@ -216,7 +228,7 @@ def mutate_model(model):
 
 
 
-def evolve_models(initial_model, generations, number_of_games=10):
+def evolve_models(initial_model, generations, number_of_games):
     best_model = initial_model
     best_fitness = -float('inf')
 
@@ -248,6 +260,18 @@ def save_model(model, generation):
 
 
 if __name__ == "__main__":
-    initial_model = ChessNN()
-    generations = 10  # Number of generations to evolve
-    evolve_models(initial_model, generations)
+    model_directory = "models"
+    model_path = find_most_recent_model(model_directory)
+
+    if model_path:
+        print(f"Loading model from {model_path}")
+        model = ChessNN()
+        model.load_state_dict(torch.load(model_path))
+    else:
+        print("No existing model found. Starting with a new model.")
+        model = ChessNN()
+
+    generations = 100  # Number of generations to evolve
+    number_of_games = 30    # Number of games played to evaluate fitness against random bot
+    evolve_models(model, generations, number_of_games)
+
