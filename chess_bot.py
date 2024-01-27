@@ -214,7 +214,9 @@ def play_random_game(model):
     # Calculate the score on the board
     white_score, black_score = calculate_material_score(board)
     # Determine the winner
-    if board.is_checkmate():
+    if MOVE >= max_turns:
+        winner = "Draw"
+    elif board.is_checkmate():
         winner = "Black" if board.turn == chess.WHITE else "White"
     elif board.is_stalemate() or board.is_insufficient_material() or board.can_claim_draw():
         winner = "Draw"
