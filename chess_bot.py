@@ -215,13 +215,31 @@ def mutate_model(model):
     # Copy weights from the old model
     new_model.load_state_dict(model.state_dict())
 
-    magnitude = 10 ** random.randint(-5,0)
-    
+    # Choose mutation strategy
+    mutation_strategy = random.choice(["original", "single_weight", "probabilistic"])
+
+    magnitude = 10 ** random.randint(-6,0)
+    total_weights = sum(p.numel() for p in model.parameters())
+
     with torch.no_grad():
-        for param in new_model.parameters():
-            # Apply a small random change to each weight
-            param.add_(torch.randn(param.size()) * 0.1 * magnitude)
-    
+        if mutation_strategy == "original":
+            for param in new_model.parameters():
+                # Apply a small random change to each weight
+                param.add_(torch.randn(param.size()) * 0.1 * magnitude)
+
+        elif mutation_strategy == "single_weight":
+            # Choose a single random weight to mutate
+            chosen_param = random.choice([p for p in new_model.parameters() if p.numel() > 0])
+            random_idx = tuple(random.randint(0, dim - 1) for dim in chosen_param.shape)
+            chosen_param[random_idx] += torch.randn(1) * 0.1 * magnitude
+
+        elif mutation_strategy == "probabilistic":
+            for param in new_model.parameters():
+                change_probability = 1 / total_weights
+                for idx in np.ndindex(param.shape):
+                    if random.random() < change_probability:
+                        param[idx] += torch.randn(1) * 0.1 * magnitude
+
     return new_model
 
 
