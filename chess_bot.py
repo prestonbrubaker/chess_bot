@@ -66,9 +66,9 @@ def play_random_game():
         print("~~~~~~~~~~~~~             MOVE " + str(MOVE) +"                 ~~~~~~~~~~~~~~~~")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
 
-        print("CURRENT STATE OF THE BOARD\n")
+        print("\nCURRENT STATE OF THE BOARD\n")
         print_board(board)
-        print("WHITE'S TURN" if board.turn else "BLACK'S TURN")
+        print("\nWHITE'S TURN" if board.turn else "\nBLACK'S TURN")
 
         legal_moves = list(board.legal_moves)
         print("\nPOSSIBLE MOVES:", ", ".join(map(str, legal_moves)))
@@ -82,19 +82,19 @@ def play_random_game():
                 chosen_move = get_random_move(board)
         else:
             chosen_move = get_random_move(board)
-        print("ChOSEN MOVE:", chosen_move)
+        print("\nCHOSEN MOVE:", chosen_move)
 
         
 
         board.push(chosen_move)
-        print("BOARD AFTER MOVE:")
+        print("\nBOARD AFTER MOVE:")
         print_board(board)
         print("\n\n\n")
 
         if board.is_checkmate():
-            print("CHECKMATE!")
+            print("\nCHECKMATE!")
         elif board.is_stalemate():
-            print("STALEMATE!")
+            print("\nSTALEMATE!")
         
         time.sleep(5)
         MOVE += 1
