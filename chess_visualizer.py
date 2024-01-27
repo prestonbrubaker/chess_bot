@@ -138,6 +138,7 @@ def play_human_game(model):
             
             chosen_index = choose_index_by_evaluation(evaluation_scores)
             chosen_move = legal_moves[chosen_index]
+            print("\nAI'S EVALUATION OF EACH MOVE: ", str(evaluation_scores))
             print("\nAI's MOVE:", chosen_move)
         else:
             # Human's turn (Black)
