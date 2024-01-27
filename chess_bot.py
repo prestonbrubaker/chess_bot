@@ -94,7 +94,7 @@ def play_random_game():
             print("Stalemate!")
         
         time.sleep(5)
-        move += 1
+        MOVE += 1
 
 
 if __name__ == "__main__":
