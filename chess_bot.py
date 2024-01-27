@@ -2,6 +2,8 @@ import chess
 import random
 import time
 
+move = 0
+
 def print_board(board):
     """Prints the chess board in a simple text format."""
     print("  +------------------------+")
@@ -58,6 +60,10 @@ def play_random_game():
     board = chess.Board()
 
     while not board.is_game_over():
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("~~~~~~~~~~~~~             MOVE " + str(move) +"                 ~~~~~~~~~~~~~~~~")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        
         print_board(board)
         print("White's turn" if board.turn else "Black's turn")
 
@@ -88,6 +94,7 @@ def play_random_game():
             print("Stalemate!")
         
         time.sleep(5)
+        move += 1
 
 
 if __name__ == "__main__":
