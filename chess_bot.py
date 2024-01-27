@@ -120,6 +120,24 @@ def run_multiple_games(number_of_games):
     print("Black wins:", black_wins)
     print("Draws:", draws)
 
+
+
+def evaluate_fitness(model, number_of_games=10):
+    white_wins = 0
+    black_wins = 0
+
+    for _ in range(number_of_games):
+        winner = play_random_game(model)
+        if winner == "White":
+            white_wins += 1
+        elif winner == "Black":
+            black_wins += 1
+
+    return (white_wins - black_wins) / number_of_games
+
+
+
+
 # White is the neural network bot, and black is the random bot
 def play_random_game():
     global MOVE
@@ -128,39 +146,39 @@ def play_random_game():
     MOVE = 0
 
     while not board.is_game_over():
-        print("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print("~~~~~~~~~~~~~             MOVE " + str(MOVE) + "                 ~~~~~~~~~~~~~~~~")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
+        #print("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        #print("~~~~~~~~~~~~~             MOVE " + str(MOVE) + "                 ~~~~~~~~~~~~~~~~")
+        #print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
 
-        print("\nCURRENT STATE OF THE BOARD\n")
-        print_board(board)
-        print("\nWHITE'S TURN" if board.turn else "\nBLACK'S TURN")
+        #print("\nCURRENT STATE OF THE BOARD\n")
+        #print_board(board)
+        #print("\nWHITE'S TURN" if board.turn else "\nBLACK'S TURN")
 
         legal_moves = list(board.legal_moves)
-        print("\nPOSSIBLE MOVES:", ", ".join(map(str, legal_moves)))
+        #print("\nPOSSIBLE MOVES:", ", ".join(map(str, legal_moves)))
         
         if board.turn == chess.WHITE:
             is_white_turn = True
             evaluation_scores = []
             for possible_move in legal_moves:
                 encoded_state = encode_game_state(board, possible_move, is_white_turn)
-                print("\n\nENCODED STATE: " + str(encoded_state))
+                #print("\n\nENCODED STATE: " + str(encoded_state))
 
                 evaluation = evaluate_position(encoded_state)
                 evaluation_scores.append(evaluation)
-                print("\nEvaluation of the position:", evaluation)
+                #print("\nEvaluation of the position:", evaluation)
             
             chosen_index = choose_index_by_evaluation(evaluation_scores)
             chosen_move = legal_moves[chosen_index]
         else:
             chosen_move = get_random_move(board)
 
-        print("\nCHOSEN MOVE:", chosen_move)
+        #print("\nCHOSEN MOVE:", chosen_move)
 
         board.push(chosen_move)
-        print("\nBOARD AFTER MOVE:")
-        print_board(board)
-        print("\n\n\n")
+        #print("\nBOARD AFTER MOVE:")
+        #print_board(board)
+        #print("\n\n\n")
         MOVE += 1
 
     # Determine the winner
@@ -175,5 +193,60 @@ def play_random_game():
 
 
 
+
+
+
+def mutate_model(model):
+    # Create a new model instance
+    new_model = ChessNN()
+    # Copy weights from the old model
+    new_model.load_state_dict(model.state_dict())
+
+    with torch.no_grad():
+        for param in new_model.parameters():
+            # Apply a small random change to each weight
+            param.add_(torch.randn(param.size()) * 0.1)
+    
+    return new_model
+
+
+
+
+
+
+
+def evolve_models(initial_model, generations, number_of_games=10):
+    best_model = initial_model
+    best_fitness = -float('inf')
+
+    for gen in range(generations):
+        print(f"Generation {gen + 1}/{generations}")
+
+        # Evaluate the current best model
+        fitness = evaluate_fitness(best_model, number_of_games)
+        print(f"Current best fitness: {fitness}")
+
+        # If the new model is better, update the best model
+        if fitness > best_fitness:
+            best_fitness = fitness
+            save_model(best_model, gen)
+        
+        # Create a new model by mutating the best model
+        best_model = mutate_model(best_model)
+    
+    # Save the final model
+    save_model(best_model, generations)
+
+def save_model(model, generation):
+    directory = "models"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    filename = f"{directory}/model_gen_{generation}.pth"
+    torch.save(model.state_dict(), filename)
+
+
+
 if __name__ == "__main__":
-    run_multiple_games(10)
+    initial_model = ChessNN()
+    generations = 10  # Number of generations to evolve
+    evolve_models(initial_model, generations)
