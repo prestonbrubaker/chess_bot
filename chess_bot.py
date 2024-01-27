@@ -135,7 +135,7 @@ def run_multiple_games(number_of_games):
 
 
 
-def evaluate_fitness(model, number_of_games=10):
+def evaluate_fitness(model, number_of_games):
     white_wins = 0
     black_wins = 0
 
@@ -146,7 +146,6 @@ def evaluate_fitness(model, number_of_games=10):
         elif winner == "Black":
             black_wins += 1
     fitness = (white_wins - black_wins) / number_of_games
-    print("        fitness: " + str(fitness) + " ")
     return fitness
 
 
