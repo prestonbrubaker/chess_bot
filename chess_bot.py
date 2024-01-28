@@ -18,12 +18,12 @@ import torch.nn.init as init
 class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
-        # Convolutional layers
-        self.conv1 = nn.Conv2d(1, 4, kernel_size=3, stride=1, padding=1)  # Adjust parameters as needed
-        self.conv2 = nn.Conv2d(4, 4, kernel_size=3, stride=1, padding=1)
+        # Convolutional layers for the board
+        self.conv1 = nn.Conv2d(1, 16, kernel_size=3, stride=1, padding=1)  # Output: 16x8x8
+        self.conv2 = nn.Conv2d(16, 4, kernel_size=3, stride=1, padding=1)  # Output: 4x8x8
 
         # Fully connected layers
-        self.fc1 = nn.Linear(4*4*4 + 13, 128)  # 32*4*4 for conv output, 13 for additional bits
+        self.fc1 = nn.Linear(4 * 4 * 4 + 13, 128)  # 4*4*4 for conv output, 13 for additional bits
         self.fc2 = nn.Linear(128, 1)
 
         # Xavier initialization
@@ -33,7 +33,7 @@ class ChessNN(nn.Module):
 
     def forward(self, x):
         # Split input into board and additional bits
-        board = x[:, :256].view(-1, 1, 8, 8)  # Adjust view shape as per encoding
+        board = x[:, :256].view(-1, 1, 16, 16)  # Adjust view shape as per encoding
         additional_bits = x[:, 256:]
 
         # Convolutional layers
