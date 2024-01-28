@@ -126,7 +126,7 @@ def evaluate_fitness(model, number_of_games):
     for _ in range(number_of_games):
         winner, white_score, black_score = play_random_game(model)
         #score_difference = white_score - black_score
-        score_difference = 8 - black_score
+        score_difference = 15 - black_score
         total_score += score_difference
         if winner == "White":
             #total_score += score_difference
@@ -146,7 +146,7 @@ def piece_value(piece):
     """Returns the value of a chess piece."""
     if piece is None:
         return 0
-    value_dict = {chess.PAWN: 1, chess.KNIGHT: 0, chess.BISHOP: 0, chess.ROOK: 0, chess.QUEEN: 0, chess.KING: 0}
+    value_dict = {chess.PAWN: 1, chess.KNIGHT: 1, chess.BISHOP: 1, chess.ROOK: 1, chess.QUEEN: 1, chess.KING: 0}
     return value_dict[piece.piece_type]
 
 
@@ -269,8 +269,8 @@ global_best_fitness = -float('inf')
 
 def evolve_models(generations, number_of_games):
     global global_best_model, global_best_fitness
-    population_size = 500
-    top_n = 400
+    population_size = 100
+    top_n = 80
     population = initialize_population(population_size)
 
     for gen in range(generations):
