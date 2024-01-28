@@ -92,7 +92,8 @@ GAME = 0
 
 def evaluate_position(encoded_state):
     # Convert the encoded state to a PyTorch tensor
-    input_tensor = torch.FloatTensor(encoded_state).unsqueeze(0)  # Add batch dimension
+    input_tensor = torch.FloatTensor(encoded_state).unsqueeze(0)
+    print("Input tensor size:", input_tensor.size())  # Should be [batch_size, 269]
 
     # Feed the tensor into the neural network
     output = model(input_tensor)
