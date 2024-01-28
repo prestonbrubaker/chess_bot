@@ -323,5 +323,5 @@ if __name__ == "__main__":
         model = ChessNN()
 
     generations = 100000
-    number_of_games = 10
+    number_of_games = 30
     evolve_models(generations, number_of_games)
