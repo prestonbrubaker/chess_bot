@@ -170,12 +170,11 @@ def calculate_material_score(board):
 
 
 # White is the neural network bot, and black is the random bot
-def play_random_game(model):
+def play_random_game(model, max_turns = 500):
     global MOVE
 
     board = chess.Board()
     MOVE = 0
-    max_turns = 500
 
     while not board.is_game_over and MOVE < max_turns():
         #print("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
