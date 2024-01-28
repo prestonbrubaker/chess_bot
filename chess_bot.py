@@ -6,11 +6,18 @@ import torch.nn as nn
 import torch.nn.functional as F
 import os
 import numpy as np
+import torch.nn.init as init
+
+
 
 
 class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
+        self.fc1 = nn.Linear(269, 269)
+        self.fc2 = nn.Linear(269, 1)
+
+        # Xavier initialization
         init.xavier_uniform_(self.fc1.weight)
         init.xavier_uniform_(self.fc2.weight)
 
