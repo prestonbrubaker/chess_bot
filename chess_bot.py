@@ -23,7 +23,7 @@ class ChessNN(nn.Module):
         self.conv2 = nn.Conv2d(16, 4, kernel_size=3, stride=1, padding=1)  # Output: 4x8x8
 
         # Fully connected layers
-        self.fc1 = nn.Linear(4 * 4 * 4 + 13, 128)  # 4*4*4 for conv output, 13 for additional bits
+        self.fc1 = nn.Linear(4 * 4 * 4 + 13, 128)  # Adjust this if the conv output size changes
         self.fc2 = nn.Linear(128, 1)
 
         # Xavier initialization
@@ -43,7 +43,7 @@ class ChessNN(nn.Module):
 
         # Flatten and combine
         board = board.view(board.size(0), -1)
-        combined = torch.cat((board, additional_bits), dim=1)
+        combined = torch.cat((board, additional_bits), dim=1)  # Should result in size [batch_size, 77]
 
         # Fully connected layers
         combined = F.relu(self.fc1(combined))
