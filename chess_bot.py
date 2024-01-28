@@ -181,7 +181,7 @@ def piece_value(piece):
     """Returns the value of a chess piece."""
     if piece is None:
         return 0
-    value_dict = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK: 5, chess.QUEEN: 9, chess.KING: 0}
+    value_dict = {chess.PAWN: 1, chess.KNIGHT: 0, chess.BISHOP: 0, chess.ROOK: 0, chess.QUEEN: 0, chess.KING: 0}
     return value_dict[piece.piece_type]
 
 def calculate_material_score(board):
@@ -251,7 +251,7 @@ def mutate_model(model):
     # Choose mutation strategy
     mutation_strategy = random.choice(["original", "single_weight", "probabilistic"])
 
-    magnitude = 10 ** random.randint(-4,0)
+    magnitude = 10 ** random.randint(-5,-1)
     total_weights = sum(p.numel() for p in model.parameters())
 
     with torch.no_grad():
@@ -305,8 +305,8 @@ global_best_fitness = -float('inf')
 
 def evolve_models(generations, number_of_games):
     global global_best_model, global_best_fitness
-    population_size = 20
-    top_n = 2
+    population_size = 200
+    top_n = 10
     population = initialize_population(population_size)
 
     for gen in range(generations):
