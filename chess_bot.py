@@ -165,6 +165,7 @@ def evaluate_fitness(model, number_of_games):
             losses += 1
 
     fitness = total_score
+    print(fitness)
     win_fraction = wins / (wins + losses) if wins + losses > 0 else 0
     return fitness, win_fraction
 
