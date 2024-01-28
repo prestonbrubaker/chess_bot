@@ -11,13 +11,11 @@ class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
         self.fc1 = nn.Linear(269, 269)  # Input layer
-        self.fc2 = nn.Linear(269, 269)  # Hidden layer 1
-        self.fc3 = nn.Linear(269, 1)    # Output layer
+        self.fc2 = nn.Linear(269, 1)    # Output layer
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = torch.sigmoid(self.fc3(x))  # Sigmoid activation for output
+        x = torch.sigmoid(self.fc2(x))  # Sigmoid activation for output
         return x
 
 
