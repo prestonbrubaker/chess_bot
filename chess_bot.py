@@ -308,8 +308,8 @@ global_best_fitness = -float('inf')
 
 def evolve_models(generations, number_of_games):
     global global_best_model, global_best_fitness
-    population_size = 30
-    top_n = 5
+    population_size = 10
+    top_n = 2
     population = initialize_population(population_size)
 
     for gen in range(generations):
