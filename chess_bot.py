@@ -191,7 +191,7 @@ def calculate_material_score(board):
 
 
 # White is the neural network bot, and black is the random bot
-def play_random_game(model, max_turns=30):
+def play_random_game(model, max_turns=10):
     global MOVE
 
     board = chess.Board()
@@ -243,7 +243,7 @@ def mutate_model(model):
     # Choose mutation strategy
     mutation_strategy = random.choice(["original", "single_weight", "probabilistic"])
 
-    magnitude = 10 ** random.randint(-6,0)
+    magnitude = 10 ** random.randint(-4,0)
     total_weights = sum(p.numel() for p in model.parameters())
 
     with torch.no_grad():
@@ -297,8 +297,8 @@ global_best_fitness = -float('inf')
 
 def evolve_models(generations, number_of_games):
     global global_best_model, global_best_fitness
-    population_size = 50
-    top_n = 15
+    population_size = 240
+    top_n = 8
     population = initialize_population(population_size)
 
     for gen in range(generations):
@@ -351,5 +351,5 @@ if __name__ == "__main__":
         model = ChessNN()
 
     generations = 100000
-    number_of_games = 100
+    number_of_games = 20
     evolve_models(generations, number_of_games)
