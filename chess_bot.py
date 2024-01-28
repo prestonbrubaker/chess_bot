@@ -157,7 +157,7 @@ def evaluate_fitness(model, number_of_games):
         winner, white_score, black_score = play_random_game(model)
         score_difference = white_score - black_score
         if winner == "White":
-            total_score += score_difference + 20
+            total_score += score_difference
             wins += 1
         elif winner == "Black":
             total_score += score_difference
