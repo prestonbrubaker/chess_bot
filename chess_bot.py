@@ -30,25 +30,25 @@ class ChessNN(nn.Module):
                 init.xavier_uniform_(layer.weight)
 
     def forward(self, x):
-        # Assume x has shape [1, 269] for a single instance
-        board = x[:, :256].view(1, 1, 16, 16)  # Reshape board part to [1, 1, 16, 16]
-        additional_bits = x[:, 256:].view(1, 13)  # Reshape additional_bits to [1, 13]
-
+        # Split input into board and additional bits
+        board = x[:, :256].view(-1, 1, 8, 8)  # Reshape board part to [1, 1, 8, 8]
+        additional_bits = x[:, 256:]  # Additional bits part
+    
         # Convolutional and pooling layers
         board = F.relu(self.conv1(board))
         board = F.relu(self.conv2(board))
         board = self.pool(board)  # Reduces to [1, 4, 4, 4]
-
+    
         # Flatten board
-        board = board.view(1, -1)  # Flatten to [1, 64]
-
+        board = board.view(-1, 4 * 4 * 4)  # Flatten to [1, 64]
+    
         # Concatenate board and additional bits
         combined = torch.cat((board, additional_bits), dim=1)  # Concatenate along dim 1
-
+    
         # Fully connected layers
         combined = F.relu(self.fc1(combined))
         output = torch.sigmoid(self.fc2(combined))
-
+    
         return output
 
 
