@@ -157,7 +157,6 @@ def evaluate_fitness(model, number_of_games):
         winner, white_score, black_score = play_random_game(model)
         #score_difference = white_score - black_score
         score_difference = 40 - black_score
-        print(score_difference)
         if winner == "White":
             total_score += score_difference
             wins += 1
@@ -165,7 +164,7 @@ def evaluate_fitness(model, number_of_games):
             total_score += score_difference
             losses += 1
 
-    fitness = total_score / number_of_games
+    fitness = total_score
     win_fraction = wins / (wins + losses) if wins + losses > 0 else 0
     return fitness, win_fraction
 
@@ -201,7 +200,7 @@ def play_random_game(model, max_turns=18):
 
     while not board.is_game_over() and MOVE < max_turns:
         legal_moves = list(board.legal_moves)
-        
+        white_score, black_score = calculate_material_score(board)
         if board.turn == chess.WHITE:
             is_white_turn = True
             evaluation_scores = []
