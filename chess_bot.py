@@ -305,6 +305,7 @@ def evolve_models(generations, number_of_games):
 
         std_dev_fitness = np.std(fitness_scores)
         avg_win_fraction = np.mean(win_fractions)
+        avg_fitness = np.mean(fitness_scores)  # Calculate average fitness
 
         gen_best_fitness = max(fitness_scores)
         if gen_best_fitness > global_best_fitness:
@@ -315,10 +316,10 @@ def evolve_models(generations, number_of_games):
         top_models = select_top_models(population, fitness_scores, top_n)
         population = repopulate(top_models, population_size)
 
-        print(f"Generation {gen + 1}/{generations}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}, Avg Win Fraction: {avg_win_fraction}")
+        # Print generation info including best fitness ever, standard deviation, average win fraction, and average fitness
+        print(f"Generation {gen + 1}/{generations}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}, Avg Win Fraction: {avg_win_fraction}, Avg Fitness: {avg_fitness}")
         with open("fitness_log.txt", 'a') as file:
-            file.write(f"Generation {gen + 1}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}, Avg Win Fraction: {avg_win_fraction}\n")
-
+            file.write(f"Generation {gen + 1}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}, Avg Win Fraction: {avg_win_fraction}, Avg Fitness: {avg_fitness}\n")
 
 
 def save_model(model, generation):
