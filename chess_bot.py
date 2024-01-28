@@ -252,7 +252,7 @@ def repopulate(selected_models, total_size):
     new_population = selected_models.copy()
     while len(new_population) < total_size:
         for model in selected_models:
-            if(random.uniform() < .2):
+            if(random.uniform(0, 1) < .2):
                 mutated_model = mutate_model(model)
                 new_population.append(mutated_model)
                 if len(new_population) >= total_size:
