@@ -11,20 +11,45 @@ import torch.nn.init as init
 
 
 
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.nn.init as init
+
 class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
-        self.fc1 = nn.Linear(269, 269)
-        self.fc2 = nn.Linear(269, 1)
+        # Convolutional layers
+        self.conv1 = nn.Conv2d(1, 16, kernel_size=3, stride=1, padding=1)  # Adjust parameters as needed
+        self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
+
+        # Fully connected layers
+        self.fc1 = nn.Linear(32*4*4 + 13, 128)  # 32*4*4 for conv output, 13 for additional bits
+        self.fc2 = nn.Linear(128, 1)
 
         # Xavier initialization
-        init.xavier_uniform_(self.fc1.weight)
-        init.xavier_uniform_(self.fc2.weight)
+        for layer in [self.fc1, self.fc2, self.conv1, self.conv2]:
+            if hasattr(layer, 'weight'):
+                init.xavier_uniform_(layer.weight)
 
     def forward(self, x):
-        x = torch.sigmoid(self.fc1(x))
-        x = torch.sigmoid(self.fc2(x))
-        return x
+        # Split input into board and additional bits
+        board = x[:, :256].view(-1, 1, 8, 8)  # Adjust view shape as per encoding
+        additional_bits = x[:, 256:]
+
+        # Convolutional layers
+        board = F.relu(self.conv1(board))
+        board = F.relu(self.conv2(board))
+        board = F.avg_pool2d(board, 2)  # Pool to reduce to 4x4
+
+        # Flatten and combine
+        board = board.view(board.size(0), -1)
+        combined = torch.cat((board, additional_bits), dim=1)
+
+        # Fully connected layers
+        combined = F.relu(self.fc1(combined))
+        output = torch.sigmoid(self.fc2(combined))
+
+        return output
 
 
 
