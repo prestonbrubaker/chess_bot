@@ -30,31 +30,23 @@ class ChessNN(nn.Module):
                 init.xavier_uniform_(layer.weight)
 
     def forward(self, x):
-        # Split input into board and additional bits
-        board = x[:, :256].view(-1, 1, 8, 8)  # Reshape to 8x8 grid
-        additional_bits = x[:, 256:]
-
+        board = x[:, :256].view(-1, 1, 8, 8)  # Reshape to [batch_size, 1, 8, 8]
+        additional_bits = x[:, 256:].view(-1, 13)  # Reshape to [batch_size, 13]
+    
         # Convolutional layers
         board = F.relu(self.conv1(board))
         board = F.relu(self.conv2(board))
         board = self.pool(board)  # Pool to reduce to 4x4
-
-        # Inside the forward method
-        print("Board size before view:", board.size())  # Should be [batch_size, 4, 4, 4]
-        board = board.view(-1, 4 * 4 * 4)
-        print("Board size after view:", board.size())  # Should be [batch_size, 64]
-        
-        print("Additional bits size:", additional_bits.size())  # Should be [batch_size, 13]
-        
+    
+        board = board.view(-1, 4 * 4 * 4)  # Flatten
+    
         # Concatenate
         combined = torch.cat((board, additional_bits), dim=1)
-        print("Combined size:", combined.size())  # Should be [batch_size, 77]
-
-
+    
         # Fully connected layers
         combined = F.relu(self.fc1(combined))
         output = torch.sigmoid(self.fc2(combined))
-
+    
         return output
 
 
@@ -92,13 +84,15 @@ GAME = 0
 
 def evaluate_position(encoded_state):
     # Convert the encoded state to a PyTorch tensor
-    input_tensor = torch.FloatTensor(encoded_state).unsqueeze(0)
-    print("Input tensor size:", input_tensor.size())  # Should be [batch_size, 269]
+    input_tensor = torch.FloatTensor(encoded_state).unsqueeze(0)  # [1, 269] shape for a single encoded state
+
+    # Check the shape of the input tensor
+    print("Input tensor shape:", input_tensor.shape)  # Should be [1, 269]
 
     # Feed the tensor into the neural network
     output = model(input_tensor)
 
-    return output.item()  # Return the single output value as a Python number
+    return output.item()
 
 
 def encode_game_state(board, move, is_white_turn):
