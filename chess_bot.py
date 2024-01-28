@@ -30,14 +30,14 @@ def find_most_recent_model(directory):
     valid_files = []
     for f in model_files:
         parts = f.split('_')
-        if len(parts) >= 5 and parts[4].split('.')[0].isdigit():
-            gen_number = int(parts[4].split('.')[0])
+        if len(parts) >= 6 and parts[5].split('.')[0].isdigit():
+            gen_number = int(parts[5].split('.')[0])
             valid_files.append((f, gen_number))
 
     # Check if there are any files left after filtering
     if not valid_files:
         return None
-
+    
     # Find the latest model based on the generation number
     latest_model = max(valid_files, key=lambda x: x[1])[0]
     return os.path.join(directory, latest_model)
