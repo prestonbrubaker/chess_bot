@@ -32,14 +32,14 @@ class ChessNN(nn.Module):
         board = x[:, :256].view(-1, 1, 16, 16)
         additional_bits = x[:, 256:]
 
-        board = F.relu(self.conv1(board))
-        board = F.relu(self.conv2(board))
+        board = torch.sigmoid(self.conv1(board))
+        board = torch.sigmoid(self.conv2(board))
         board = self.pool(board)
 
         board = board.view(-1, 2 * 8 * 8)
         combined = torch.cat((board, additional_bits), dim=1)
 
-        combined = F.relu(self.fc1(combined))
+        combined = torch.sigmoid(self.fc1(combined))
         output = torch.sigmoid(self.fc2(combined))
 
         return output
@@ -232,7 +232,7 @@ def mutate_model(model):
     # Choose mutation strategy
     mutation_strategy = random.choice(["original", "single_weight", "probabilistic"])
 
-    magnitude = 10 ** random.randint(-4,2)
+    magnitude = 10 ** random.randint(-6,0)
     total_weights = sum(p.numel() for p in model.parameters())
 
     with torch.no_grad():
