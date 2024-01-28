@@ -12,17 +12,16 @@ import torch.nn.init as init
 class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
-        # Convolutional layers for the board
-        self.conv1 = nn.Conv2d(1, 16, kernel_size=3, stride=1, padding=1)  # Output: 16x16x16
-        self.conv2 = nn.Conv2d(16, 4, kernel_size=3, stride=1, padding=1)  # Output: 4x16x16
+        # Reduced the number of channels in convolutional layers
+        self.conv1 = nn.Conv2d(1, 8, kernel_size=3, stride=1, padding=1)  # Output: 8x16x16
+        self.conv2 = nn.Conv2d(8, 2, kernel_size=3, stride=1, padding=1)  # Output: 2x16x16
 
-        # Pooling to reduce to 4x8x8
-        self.pool = nn.MaxPool2d(2, 2)  # Output: 4x8x8
+        # Pooling to reduce to 2x8x8
+        self.pool = nn.MaxPool2d(2, 2)  # Output: 2x8x8
 
-        # Fully connected layers
-        # 4*8*8 from conv output, 13 for additional bits
-        self.fc1 = nn.Linear(4 * 8 * 8 + 13, 128)
-        self.fc2 = nn.Linear(128, 1)
+        # Smaller fully connected layers
+        self.fc1 = nn.Linear(2 * 8 * 8 + 13, 64)
+        self.fc2 = nn.Linear(64, 1)
 
         # Xavier initialization
         for layer in [self.fc1, self.fc2, self.conv1, self.conv2]:
@@ -30,22 +29,16 @@ class ChessNN(nn.Module):
                 init.xavier_uniform_(layer.weight)
 
     def forward(self, x):
-        # Split input into board (256 bits) and additional bits (13 bits)
-        board = x[:, :256].view(-1, 1, 16, 16)  # Reshape board to [batch_size, 1, 16, 16]
-        additional_bits = x[:, 256:]  # Additional bits are the last 13 bits
+        board = x[:, :256].view(-1, 1, 16, 16)
+        additional_bits = x[:, 256:]
 
-        # Convolutional and pooling layers
         board = F.relu(self.conv1(board))
         board = F.relu(self.conv2(board))
-        board = self.pool(board)  # Pooling reduces to [batch_size, 4, 8, 8]
+        board = self.pool(board)
 
-        # Flatten board
-        board = board.view(-1, 4 * 8 * 8)  # Flatten to [batch_size, 256]
+        board = board.view(-1, 2 * 8 * 8)
+        combined = torch.cat((board, additional_bits), dim=1)
 
-        # Concatenate board and additional bits
-        combined = torch.cat((board, additional_bits), dim=1)  # Concatenate along dim 1
-
-        # Fully connected layers
         combined = F.relu(self.fc1(combined))
         output = torch.sigmoid(self.fc2(combined))
 
