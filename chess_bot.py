@@ -194,7 +194,7 @@ def calculate_material_score(board):
 
 
 # White is the neural network bot, and black is the random bot
-def play_random_game(model, max_turns=18):
+def play_random_game(model, max_turns=10):
     global MOVE
 
     board = chess.Board()
@@ -300,7 +300,7 @@ global_best_fitness = -float('inf')
 
 def evolve_models(generations, number_of_games):
     global global_best_model, global_best_fitness
-    population_size = 30
+    population_size = 60
     top_n = 3
     population = initialize_population(population_size)
 
@@ -354,5 +354,5 @@ if __name__ == "__main__":
         model = ChessNN()
 
     generations = 100000
-    number_of_games = 20
+    number_of_games = 50
     evolve_models(generations, number_of_games)
