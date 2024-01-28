@@ -156,12 +156,13 @@ def evaluate_fitness(model, number_of_games):
     for _ in range(number_of_games):
         winner, white_score, black_score = play_random_game(model)
         #score_difference = white_score - black_score
-        score_difference = 40 - black_score
+        score_difference = 39 - black_score
+        total_score += score_difference
         if winner == "White":
-            total_score += score_difference
+            #total_score += score_difference
             wins += 1
         elif winner == "Black":
-            total_score += score_difference
+            #total_score += score_difference
             losses += 1
 
     fitness = total_score
