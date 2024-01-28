@@ -11,12 +11,12 @@ import numpy as np
 class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
-        self.fc1 = nn.Linear(269, 269)  # Input layer
-        self.fc2 = nn.Linear(269, 1)    # Output layer
+            init.xavier_uniform_(self.fc1.weight)
+            init.xavier_uniform_(self.fc2.weight)
 
     def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = torch.sigmoid(self.fc2(x))  # Sigmoid activation for output
+        x = torch.sigmoid(self.fc1(x))
+        x = torch.sigmoid(self.fc2(x))
         return x
 
 
