@@ -9,17 +9,6 @@ import numpy as np
 import torch.nn.init as init
 
 
-
-
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.nn.init as init
-
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.nn.init as init
-
 class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
@@ -50,8 +39,13 @@ class ChessNN(nn.Module):
         board = F.relu(self.conv2(board))
         board = self.pool(board)  # Pool to reduce to 4x4
 
-        # Flatten and combine
-        board = board.view(-1, 4 * 4 * 4)  # Flatten
+        # Ensure board is correctly reshaped/flattened
+        board = board.view(-1, 4 * 4 * 4)  # Flatten to [batch_size, 64]
+
+        # Ensure additional_bits is correctly shaped
+        additional_bits = additional_bits.view(-1, 13)  # Reshape to [batch_size, 13]
+
+        # Concatenate
         combined = torch.cat((board, additional_bits), dim=1)  # Concatenate
 
         # Fully connected layers
