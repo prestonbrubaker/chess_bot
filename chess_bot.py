@@ -214,7 +214,7 @@ def mutate_model(model):
     # Choose mutation strategy
     mutation_strategy = random.choice(["original", "single_weight", "probabilistic"])
 
-    magnitude = 10 ** random.randint(-5,1)
+    magnitude = 10 ** random.randint(-4,2)
     total_weights = sum(p.numel() for p in model.parameters())
 
     with torch.no_grad():
