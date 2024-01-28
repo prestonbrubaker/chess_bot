@@ -30,9 +30,13 @@ class ChessNN(nn.Module):
                 init.xavier_uniform_(layer.weight)
 
     def forward(self, x):
-        board = x[:, :256].view(-1, 1, 8, 8)  # Reshape to [batch_size, 1, 8, 8]
-        additional_bits = x[:, 256:].view(-1, 13)  # Reshape to [batch_size, 13]
+        print("Input tensor shape in forward:", x.shape)  # [batch_size, 269]
+        board = x[:, :256].view(-1, 1, 8, 8)
+        additional_bits = x[:, 256:].view(-1, 13)
     
+        print("Board shape after view:", board.shape)  # [batch_size, 1, 8, 8]
+        print("Additional bits shape after view:", additional_bits.shape)  # [batch_size, 13]
+
         # Convolutional layers
         board = F.relu(self.conv1(board))
         board = F.relu(self.conv2(board))
@@ -85,13 +89,10 @@ GAME = 0
 def evaluate_position(encoded_state):
     # Convert the encoded state to a PyTorch tensor
     input_tensor = torch.FloatTensor(encoded_state).unsqueeze(0)  # [1, 269] shape for a single encoded state
-
-    # Check the shape of the input tensor
-    print("Input tensor shape:", input_tensor.shape)  # Should be [1, 269]
+    print("Input tensor shape in evaluate_position:", input_tensor.shape)  # [1, 269]
 
     # Feed the tensor into the neural network
     output = model(input_tensor)
-
     return output.item()
 
 
