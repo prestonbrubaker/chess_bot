@@ -15,6 +15,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.nn.init as init
 
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.nn.init as init
+
 class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
@@ -22,8 +27,12 @@ class ChessNN(nn.Module):
         self.conv1 = nn.Conv2d(1, 16, kernel_size=3, stride=1, padding=1)  # Output: 16x8x8
         self.conv2 = nn.Conv2d(16, 4, kernel_size=3, stride=1, padding=1)  # Output: 4x8x8
 
+        # Pooling to reduce to 4x4
+        self.pool = nn.MaxPool2d(2, 2)  # Output: 4x4x4
+
         # Fully connected layers
-        self.fc1 = nn.Linear(4 * 4 * 4 + 13, 128)  # Adjust this if the conv output size changes
+        # Adjust the input size of fc1 according to the flattened conv output
+        self.fc1 = nn.Linear(4 * 4 * 4 + 13, 128)  # 4*4*4 from conv, 13 for additional bits
         self.fc2 = nn.Linear(128, 1)
 
         # Xavier initialization
@@ -39,11 +48,11 @@ class ChessNN(nn.Module):
         # Convolutional layers
         board = F.relu(self.conv1(board))
         board = F.relu(self.conv2(board))
-        board = F.avg_pool2d(board, 2)  # Pool to reduce to 4x4
+        board = self.pool(board)  # Pool to reduce to 4x4
 
         # Flatten and combine
-        board = board.view(board.size(0), -1)
-        combined = torch.cat((board, additional_bits), dim=1)  # Should result in size [batch_size, 77]
+        board = board.view(-1, 4 * 4 * 4)  # Flatten to match the size expected by fc1
+        combined = torch.cat((board, additional_bits), dim=1)  # Concatenate
 
         # Fully connected layers
         combined = F.relu(self.fc1(combined))
