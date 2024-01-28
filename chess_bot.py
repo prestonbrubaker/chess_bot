@@ -69,22 +69,6 @@ def evaluate_position(encoded_state):
     return output.item()  # Return the single output value as a Python number
 
 
-def print_board(board):
-    """Prints the chess board in a simple text format."""
-    print("  +------------------------+")
-    for i in range(8, 0, -1):
-        print(f"{i} |", end=" ")
-        for j in range(8):
-            piece = board.piece_at(chess.square(j, i-1))
-            symbol = piece.symbol() if piece else "."
-            print(symbol, end=" ")
-        print("|")
-    print("  +------------------------+")
-    print("    a b c d e f g h")
-
-
-
-
 def encode_game_state(board, move, is_white_turn):
     def piece_to_binary(piece):
         """Converts a chess piece to a 4-bit binary representation."""
@@ -133,28 +117,6 @@ def get_random_move(board):
     """Returns a random legal move for the current player."""
     return random.choice(list(board.legal_moves))
 
-def run_multiple_games(number_of_games):
-    white_wins = 0
-    black_wins = 0
-    draws = 0
-
-    for game in range(number_of_games):
-        winner = play_random_game()
-        print("\nGAME", game, "OVER. Winner:", winner)
-
-        if winner == "White":
-            white_wins += 1
-        elif winner == "Black":
-            black_wins += 1
-        elif winner == "Draw":
-            draws += 1
-
-    print("\nFinal Results after", number_of_games, "games:")
-    print("White wins:", white_wins)
-    print("Black wins:", black_wins)
-    print("Draws:", draws)
-
-
 
 def evaluate_fitness(model, number_of_games):
     total_score = 0
@@ -187,6 +149,7 @@ def piece_value(piece):
     value_dict = {chess.PAWN: 1, chess.KNIGHT: 0, chess.BISHOP: 0, chess.ROOK: 0, chess.QUEEN: 0, chess.KING: 0}
     return value_dict[piece.piece_type]
 
+
 def calculate_material_score(board):
     """Calculates and returns the material score for White and Black."""
     white_score = 0
@@ -202,7 +165,7 @@ def calculate_material_score(board):
 
 
 # White is the neural network bot, and black is the random bot
-def play_random_game(model, max_turns=4):
+def play_random_game(model, max_turns=6):
     global MOVE
 
     board = chess.Board()
@@ -238,9 +201,6 @@ def play_random_game(model, max_turns=4):
     else:
         winner = "Game not finished"
     return winner, white_score, black_score
-
-
-
 
 
 
