@@ -39,14 +39,17 @@ class ChessNN(nn.Module):
         board = F.relu(self.conv2(board))
         board = self.pool(board)  # Pool to reduce to 4x4
 
-        # Ensure board is correctly reshaped/flattened
-        board = board.view(-1, 4 * 4 * 4)  # Flatten to [batch_size, 64]
-
-        # Ensure additional_bits is correctly shaped
-        additional_bits = additional_bits.view(-1, 13)  # Reshape to [batch_size, 13]
-
+        # Inside the forward method
+        print("Board size before view:", board.size())  # Should be [batch_size, 4, 4, 4]
+        board = board.view(-1, 4 * 4 * 4)
+        print("Board size after view:", board.size())  # Should be [batch_size, 64]
+        
+        print("Additional bits size:", additional_bits.size())  # Should be [batch_size, 13]
+        
         # Concatenate
-        combined = torch.cat((board, additional_bits), dim=1)  # Concatenate
+        combined = torch.cat((board, additional_bits), dim=1)
+        print("Combined size:", combined.size())  # Should be [batch_size, 77]
+
 
         # Fully connected layers
         combined = F.relu(self.fc1(combined))
