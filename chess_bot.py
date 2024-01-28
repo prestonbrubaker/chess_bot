@@ -175,7 +175,7 @@ def evaluate_fitness(model, number_of_games):
 
     fitness = total_score
     #print(fitness)
-    win_fraction = wins / (wins + losses) if wins + losses > 0 else 0
+    win_fraction = wins / (wins + losses)
     return fitness, win_fraction
 
 
@@ -202,7 +202,7 @@ def calculate_material_score(board):
 
 
 # White is the neural network bot, and black is the random bot
-def play_random_game(model, max_turns=12):
+def play_random_game(model, max_turns=4):
     global MOVE
 
     board = chess.Board()
@@ -254,7 +254,7 @@ def mutate_model(model):
     # Choose mutation strategy
     mutation_strategy = random.choice(["original", "single_weight", "probabilistic"])
 
-    magnitude = 10 ** random.randint(-5,-1)
+    magnitude = 10 ** random.randint(-5,1)
     total_weights = sum(p.numel() for p in model.parameters())
 
     with torch.no_grad():
