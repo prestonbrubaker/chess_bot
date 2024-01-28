@@ -288,6 +288,9 @@ def evolve_models(generations, number_of_games):
     for gen in range(generations):
         fitness_scores = [evaluate_fitness(model, number_of_games) for model in population]
 
+        # Calculate standard deviation of fitness scores
+        std_dev_fitness = np.std(fitness_scores)
+
         # Update global best model and fitness if a better model is found
         gen_best_fitness = max(fitness_scores)
         if gen_best_fitness > global_best_fitness:
@@ -298,10 +301,10 @@ def evolve_models(generations, number_of_games):
         top_models = select_top_models(population, fitness_scores, top_n)
         population = repopulate(top_models, population_size)
 
-        print(f"Generation {gen + 1}/{generations}, Best Fitness: {gen_best_fitness}")
+        # Print generation info including best fitness ever and standard deviation
+        print(f"Generation {gen + 1}/{generations}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}")
         with open("fitness_log.txt", 'a') as file:
-            file.write(f"Generation {gen + 1}, Best Fitness: {gen_best_fitness}\n")
-
+            file.write(f"Generation {gen + 1}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}\n")
 
 def save_model(model, generation):
     directory = "models"
