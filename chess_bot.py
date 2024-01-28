@@ -19,11 +19,11 @@ class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
         # Convolutional layers
-        self.conv1 = nn.Conv2d(1, 16, kernel_size=3, stride=1, padding=1)  # Adjust parameters as needed
-        self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
+        self.conv1 = nn.Conv2d(1, 4, kernel_size=3, stride=1, padding=1)  # Adjust parameters as needed
+        self.conv2 = nn.Conv2d(4, 4, kernel_size=3, stride=1, padding=1)
 
         # Fully connected layers
-        self.fc1 = nn.Linear(32*4*4 + 13, 128)  # 32*4*4 for conv output, 13 for additional bits
+        self.fc1 = nn.Linear(4*4*4 + 13, 128)  # 32*4*4 for conv output, 13 for additional bits
         self.fc2 = nn.Linear(128, 1)
 
         # Xavier initialization
