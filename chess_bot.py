@@ -24,7 +24,7 @@ class ChessNN(nn.Module):
 
 
 def find_most_recent_model(directory):
-    model_files = [f for f in os.listdir(directory) if f.endswith('.pth') and 'gen' in f]
+    model_files = [f for f in os.listdir(directory) if f.endswith('.pth') and 'best_model_gen_' in f]
     
     # Filter out files that do not match the expected pattern
     model_files = [f for f in model_files if f.count('_') >= 4 and f.split('_')[4].split('.')[0].isdigit()]
