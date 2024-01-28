@@ -250,13 +250,13 @@ def mutate_model(model):
         if mutation_strategy == "original":
             for param in new_model.parameters():
                 # Apply a small random change to each weight
-                param.add_(torch.randn(param.size()) * 0.1 * magnitude)
+                param.add_(torch.randn(param.size()) * 1 * magnitude)
 
         elif mutation_strategy == "single_weight":
             # Choose a single random weight to mutate
             chosen_param = random.choice([p for p in new_model.parameters() if p.numel() > 0])
             random_idx = tuple(random.randint(0, dim - 1) for dim in chosen_param.shape)
-            random_change = torch.randn(1).item() * 0.1 * magnitude  # Convert to scalar
+            random_change = torch.randn(1).item() * 1 * magnitude  # Convert to scalar
             chosen_param[random_idx] += random_change
 
 
@@ -265,7 +265,7 @@ def mutate_model(model):
                 change_probability = 1 / total_weights
                 for idx in np.ndindex(param.shape):
                     if random.random() < change_probability:
-                        random_change = torch.randn(1).item() * 0.1 * magnitude  # Convert to scalar
+                        random_change = torch.randn(1).item() * 1 * magnitude  # Convert to scalar
                         param[idx] += random_change
 
 
