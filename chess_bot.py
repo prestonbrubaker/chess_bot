@@ -295,7 +295,7 @@ def evolve_models(generations, number_of_games):
         population = repopulate(top_models, population_size)
 
         # Print generation info including best fitness ever, standard deviation, average win fraction, and average fitness
-        print(f"Generation {gen + 1}/{generations}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}, Avg Win Fraction: {avg_win_fraction}, Avg Fitness: {avg_fitness}")
+        print(f"Generation {gen + 1}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}, Avg Win Fraction: {avg_win_fraction}, Avg Fitness: {avg_fitness}")
         with open("fitness_log.txt", 'a') as file:
             file.write(f"Gen {gen + 1}, Best Fitness of Gen: {gen_best_fitness}, Global Best Fitn: {global_best_fitness}, Std Dev: {std_dev_fitness}, Avg Win Frac: {avg_win_fraction}, Avg Fitn: {avg_fitness}\n")
 
