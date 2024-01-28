@@ -50,20 +50,6 @@ def encode_game_state(board, move, is_white_turn):
     return board_state + turn + encoded_move
 
 
-def choose_index_by_evaluation(evaluation_scores):
-    total = sum(evaluation_scores)
-    if total == 0:
-        # If all scores are zero, choose randomly
-        return random.randint(0, len(evaluation_scores) - 1)
-
-    # Normalize scores to sum to 1 (if not already)
-    normalized_scores = [score / total for score in evaluation_scores]
-
-    # Choose an index based on these normalized weights
-    chosen_index = random.choices(range(len(evaluation_scores)), weights=normalized_scores, k=1)[0]
-    return chosen_index
-
-
 def human_game():
     global MOVE
 
@@ -84,9 +70,9 @@ def human_game():
         
         if board.turn == chess.WHITE:
              # Human's turn (White)
-            move_uci = input("Enter your move: ")
+            move_uci_white = input("Enter your move: ")
             try:
-                chosen_move = chess.Move.from_uci(move_uci)
+                chosen_move = chess.Move.from_uci(move_uci_white)
                 if chosen_move not in legal_moves:
                     print("Illegal move. Try again.")
                     continue
@@ -95,9 +81,9 @@ def human_game():
                 continue
         else:
             # Human's turn (Black)
-            move_uci = input("Enter your move: ")
+            move_uci_black = input("Enter your move: ")
             try:
-                chosen_move = chess.Move.from_uci(move_uci)
+                chosen_move = chess.Move.from_uci(move_uci_black)
                 if chosen_move not in legal_moves:
                     print("Illegal move. Try again.")
                     continue
@@ -116,12 +102,9 @@ def human_game():
     elif board.is_stalemate() or board.is_insufficient_material() or board.can_claim_draw():
         winner = "Draw"
     else:
-        winner = "Game not finished"
+        winner = "Game not finished."
 
     print("\nGame over. Winner:", winner)
 
 if __name__ == "__main__":
     human_game()
-
-    # Play against the model
-    play_human_game(model)
