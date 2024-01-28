@@ -139,17 +139,22 @@ def run_multiple_games(number_of_games):
 
 def evaluate_fitness(model, number_of_games):
     total_score = 0
+    wins = 0
+    losses = 0
 
     for _ in range(number_of_games):
         winner, white_score, black_score = play_random_game(model)
         score_difference = white_score - black_score
         if winner == "White":
             total_score += score_difference + 20
-        else:
+            wins += 1
+        elif winner == "Black":
             total_score += score_difference
+            losses += 1
 
     fitness = total_score / number_of_games
-    return fitness
+    win_fraction = wins / (wins + losses) if wins + losses > 0 else 0
+    return fitness, win_fraction
 
 
 
@@ -286,12 +291,16 @@ def evolve_models(generations, number_of_games):
     population = initialize_population(population_size)
 
     for gen in range(generations):
-        fitness_scores = [evaluate_fitness(model, number_of_games) for model in population]
+        fitness_scores = []
+        win_fractions = []
+        for model in population:
+            fitness, win_fraction = evaluate_fitness(model, number_of_games)
+            fitness_scores.append(fitness)
+            win_fractions.append(win_fraction)
 
-        # Calculate standard deviation of fitness scores
         std_dev_fitness = np.std(fitness_scores)
+        avg_win_fraction = np.mean(win_fractions)
 
-        # Update global best model and fitness if a better model is found
         gen_best_fitness = max(fitness_scores)
         if gen_best_fitness > global_best_fitness:
             global_best_fitness = gen_best_fitness
@@ -301,10 +310,11 @@ def evolve_models(generations, number_of_games):
         top_models = select_top_models(population, fitness_scores, top_n)
         population = repopulate(top_models, population_size)
 
-        # Print generation info including best fitness ever and standard deviation
-        print(f"Generation {gen + 1}/{generations}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}")
+        print(f"Generation {gen + 1}/{generations}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}, Avg Win Fraction: {avg_win_fraction}")
         with open("fitness_log.txt", 'a') as file:
-            file.write(f"Generation {gen + 1}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}\n")
+            file.write(f"Generation {gen + 1}, Best Fitness of Generation: {gen_best_fitness}, Global Best Fitness: {global_best_fitness}, Std Dev: {std_dev_fitness}, Avg Win Fraction: {avg_win_fraction}\n")
+
+
 
 def save_model(model, generation):
     directory = "models"
