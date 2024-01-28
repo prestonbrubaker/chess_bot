@@ -164,7 +164,7 @@ def evaluate_fitness(model, number_of_games):
     for _ in range(number_of_games):
         winner, white_score, black_score = play_random_game(model)
         #score_difference = white_score - black_score
-        score_difference = 39 - black_score
+        score_difference = 8 - black_score
         total_score += score_difference
         if winner == "White":
             #total_score += score_difference
@@ -202,7 +202,7 @@ def calculate_material_score(board):
 
 
 # White is the neural network bot, and black is the random bot
-def play_random_game(model, max_turns=6):
+def play_random_game(model, max_turns=8):
     global MOVE
 
     board = chess.Board()
@@ -308,8 +308,8 @@ global_best_fitness = -float('inf')
 
 def evolve_models(generations, number_of_games):
     global global_best_model, global_best_fitness
-    population_size = 200
-    top_n = 10
+    population_size = 30
+    top_n = 5
     population = initialize_population(population_size)
 
     for gen in range(generations):
