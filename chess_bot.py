@@ -313,7 +313,6 @@ def save_model(model, generation):
 
 
 if __name__ == "__main__":
-    if __name__ == "__main__":
     generations = 100000
     number_of_games = 10
     evolve_models(generations, number_of_games)
