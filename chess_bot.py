@@ -11,8 +11,8 @@ import numpy as np
 class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
-            init.xavier_uniform_(self.fc1.weight)
-            init.xavier_uniform_(self.fc2.weight)
+        init.xavier_uniform_(self.fc1.weight)
+        init.xavier_uniform_(self.fc2.weight)
 
     def forward(self, x):
         x = torch.sigmoid(self.fc1(x))
