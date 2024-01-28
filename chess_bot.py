@@ -125,7 +125,7 @@ def choose_index_by_evaluation(evaluation_scores):
     # Choose an index based on these normalized weights
     #chosen_index = random.choices(range(len(evaluation_scores)), weights=normalized_scores, k=1)[0]
     max_value = max(evaluation_scores)
-    max_index = my_list.index(max_value)
+    max_index = evaluation_scores.index(max_value)
     chosen_index = max_index
     return chosen_index
 
