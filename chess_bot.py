@@ -316,8 +316,18 @@ def save_model(model, generation):
 
 
 if __name__ == "__main__":
+    model_directory = "models"
+    model_path = find_most_recent_model(model_directory)
+
+    if model_path:
+        print(f"Loading model from {model_path}")
+        model = ChessNN()
+        model.load_state_dict(torch.load(model_path))
+        print("Starting with the loaded model.")
+    else:
+        print("No existing model found in the 'models' directory. Starting with a new model.")
+        model = ChessNN()
+
     generations = 100000
     number_of_games = 10
     evolve_models(generations, number_of_games)
-
-
