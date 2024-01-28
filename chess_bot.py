@@ -31,8 +31,8 @@ class ChessNN(nn.Module):
         self.pool = nn.MaxPool2d(2, 2)  # Output: 4x4x4
 
         # Fully connected layers
-        # Adjust the input size of fc1 according to the flattened conv output
-        self.fc1 = nn.Linear(4 * 4 * 4 + 13, 128)  # 4*4*4 from conv, 13 for additional bits
+        # 4*4*4 from conv output, 13 for additional bits
+        self.fc1 = nn.Linear(4 * 4 * 4 + 13, 128)
         self.fc2 = nn.Linear(128, 1)
 
         # Xavier initialization
@@ -42,7 +42,7 @@ class ChessNN(nn.Module):
 
     def forward(self, x):
         # Split input into board and additional bits
-        board = x[:, :256].view(-1, 1, 16, 16)  # Adjust view shape as per encoding
+        board = x[:, :256].view(-1, 1, 8, 8)  # Reshape to 8x8 grid
         additional_bits = x[:, 256:]
 
         # Convolutional layers
@@ -51,7 +51,7 @@ class ChessNN(nn.Module):
         board = self.pool(board)  # Pool to reduce to 4x4
 
         # Flatten and combine
-        board = board.view(-1, 4 * 4 * 4)  # Flatten to match the size expected by fc1
+        board = board.view(-1, 4 * 4 * 4)  # Flatten
         combined = torch.cat((board, additional_bits), dim=1)  # Concatenate
 
         # Fully connected layers
