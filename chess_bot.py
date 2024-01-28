@@ -268,8 +268,8 @@ global_best_fitness = -float('inf')
 
 def evolve_models(generations, number_of_games):
     global global_best_model, global_best_fitness
-    population_size = 50
-    top_n = 40
+    population_size = 500
+    top_n = 400
     population = initialize_population(population_size)
 
     for gen in range(generations):
@@ -322,5 +322,5 @@ if __name__ == "__main__":
         model = ChessNN()
 
     generations = 100000
-    number_of_games = 1000
+    number_of_games = 10
     evolve_models(generations, number_of_games)
