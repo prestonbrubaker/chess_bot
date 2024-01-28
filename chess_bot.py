@@ -166,7 +166,7 @@ def evaluate_fitness(model, number_of_games):
             losses += 1
 
     fitness = total_score
-    print(fitness)
+    #print(fitness)
     win_fraction = wins / (wins + losses) if wins + losses > 0 else 0
     return fitness, win_fraction
 
@@ -300,8 +300,8 @@ global_best_fitness = -float('inf')
 
 def evolve_models(generations, number_of_games):
     global global_best_model, global_best_fitness
-    population_size = 20
-    top_n = 2
+    population_size = 30
+    top_n = 3
     population = initialize_population(population_size)
 
     for gen in range(generations):
