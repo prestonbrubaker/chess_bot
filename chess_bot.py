@@ -7,6 +7,7 @@ import torch.nn.functional as F
 import os
 import numpy as np
 
+
 class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
@@ -34,6 +35,10 @@ def find_most_recent_model(directory):
 
 # Create an instance of the ChessNN
 model = ChessNN()
+
+def initialize_population(size):
+    return [ChessNN() for _ in range(size)]
+
 
 MOVE = 0
 GAME = 0
@@ -252,33 +257,51 @@ def mutate_model(model):
 
 
 
+def select_top_models(population, fitness_scores, top_n):
+    sorted_models = sorted(zip(population, fitness_scores), key=lambda x: x[1], reverse=True)
+    return [model for model, _ in sorted_models[:top_n]]
+
+def repopulate(selected_models, total_size):
+    new_population = selected_models.copy()
+    while len(new_population) < total_size:
+        for model in selected_models:
+            mutated_model = mutate_model(model)
+            new_population.append(mutated_model)
+            if len(new_population) >= total_size:
+                break
+    return new_population
 
 
 
 
-def evolve_models(initial_model, generations, number_of_games):
-    best_model = initial_model
-    best_fitness = -float('inf')
+
+# Global variables to track the best model and its fitness
+global_best_model = None
+global_best_fitness = -float('inf')
+
+def evolve_models(generations, number_of_games):
+    global global_best_model, global_best_fitness
+    population_size = 100
+    top_n = 10
+    population = initialize_population(population_size)
 
     for gen in range(generations):
-        print(f"Generation {gen + 1}/{generations}")
+        fitness_scores = [evaluate_fitness(model, number_of_games) for model in population]
 
-        # Evaluate the current best model
-        fitness = evaluate_fitness(best_model, number_of_games)
-        
+        # Update global best model and fitness if a better model is found
+        gen_best_fitness = max(fitness_scores)
+        if gen_best_fitness > global_best_fitness:
+            global_best_fitness = gen_best_fitness
+            global_best_model = population[fitness_scores.index(gen_best_fitness)]
+            save_model(global_best_model, f"best_model_gen_{gen + 1}")
 
-        # If the new model is better, update the best model
-        if fitness > best_fitness:
-            best_fitness = fitness
-            save_model(best_model, gen)
-        
-        print(f"Fitness: {fitness} Current best fitness: {best_fitness}")
+        top_models = select_top_models(population, fitness_scores, top_n)
+        population = repopulate(top_models, population_size)
+
+        print(f"Generation {gen + 1}/{generations}, Best Fitness: {gen_best_fitness}")
         with open("fitness_log.txt", 'a') as file:
-            file.write("gen " + str(gen) + " fitness " + str(fitness) + " best " + str(best_fitness) + "\n")
+            file.write(f"Generation {gen + 1}, Best Fitness: {gen_best_fitness}\n")
 
-        
-        # Create a new model by mutating the best model
-        best_model = mutate_model(best_model)
 
 def save_model(model, generation):
     directory = "models"
@@ -290,18 +313,9 @@ def save_model(model, generation):
 
 
 if __name__ == "__main__":
-    model_directory = "models"
-    model_path = find_most_recent_model(model_directory)
+    if __name__ == "__main__":
+    generations = 100000
+    number_of_games = 10
+    evolve_models(generations, number_of_games)
 
-    if model_path:
-        print(f"Loading model from {model_path}")
-        model = ChessNN()
-        model.load_state_dict(torch.load(model_path))
-    else:
-        print("No existing model found. Starting with a new model.")
-        model = ChessNN()
-
-    generations = 100000  # Number of generations to evolve
-    number_of_games = 10    # Number of games played to evaluate fitness against random bot
-    evolve_models(model, generations, number_of_games)
 
