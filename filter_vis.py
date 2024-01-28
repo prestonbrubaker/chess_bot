@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from PIL import Image
 import numpy as np
 import os
+import torch.nn.init as init
 
 class ChessNN(nn.Module):
     def __init__(self):
