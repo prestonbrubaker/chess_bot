@@ -24,11 +24,12 @@ class ChessNN(nn.Module):
 
 
 def find_most_recent_model(directory):
-    model_files = [f for f in os.listdir(directory) if f.endswith('.pth')]
+    model_files = [f for f in os.listdir(directory) if f.endswith('.pth') and 'gen' in f]
     if not model_files:
         return None
     
-    # Assuming the file format is 'model_gen_X.pth', where X is the generation number
+    # Filter out files that do not match the expected pattern and then find the latest model
+    model_files = [f for f in model_files if f.count('_') >= 2 and f.split('_')[2].split('.')[0].isdigit()]
     latest_model = max(model_files, key=lambda x: int(x.split('_')[2].split('.')[0]))
     return os.path.join(directory, latest_model)
 
