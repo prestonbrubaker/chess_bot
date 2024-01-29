@@ -44,7 +44,6 @@ class ChessNN(nn.Module):
         return output
 
 
-
 def find_most_recent_model(directory):
     model_files = [f for f in os.listdir(directory) if f.endswith('.pth') and 'best_model_gen_' in f]
 
