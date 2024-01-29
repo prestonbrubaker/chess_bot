@@ -6,6 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import os
 import numpy as np
+import torch.nn.init as init
 
 class ChessNN(nn.Module):
     def __init__(self):
