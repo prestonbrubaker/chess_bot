@@ -13,8 +13,8 @@ class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
 
-        self.conv1 = nn.Conv2d(1, 8, kernel_size=3, stride=1, padding=1)  # Output: 8x16x16
-        self.conv2 = nn.Conv2d(8, 2, kernel_size=3, stride=1, padding=1)  # Output: 2x16x16
+        self.conv1 = nn.Conv2d(1, 3, kernel_size=3, stride=1, padding=1)  # Output: 8x16x16
+        self.conv2 = nn.Conv2d(3, 2, kernel_size=3, stride=1, padding=1)  # Output: 2x16x16
 
         # Pooling to reduce to 2x8x8
         self.pool = nn.MaxPool2d(2, 2)  # Output: 2x8x8
@@ -282,8 +282,8 @@ global_best_fitness = -float('inf')
 
 def evolve_models(generations, number_of_games):
     global global_best_model, global_best_fitness
-    population_size = 300
-    top_n = 200
+    population_size = 30
+    top_n = 20
     population = initialize_population(population_size)
 
     for gen in range(generations):
