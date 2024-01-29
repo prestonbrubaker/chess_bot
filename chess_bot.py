@@ -13,7 +13,7 @@ class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
 
-        self.conv1 = nn.Conv2d(1, 3, kernel_size=3, stride=1, padding=1)  # Output: 8x16x16
+        self.conv1 = nn.Conv2d(1, 3, kernel_size=3, stride=1, padding=1)  # Output: 3x16x16
         self.conv2 = nn.Conv2d(3, 2, kernel_size=3, stride=1, padding=1)  # Output: 2x16x16
 
         # Pooling to reduce to 2x8x8
