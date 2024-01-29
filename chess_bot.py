@@ -12,14 +12,14 @@ import torch.nn.init as init
 class ChessNN(nn.Module):
     def __init__(self):
         super(ChessNN, self).__init__()
-        # Reduced the number of channels in convolutional layers
+
         self.conv1 = nn.Conv2d(1, 8, kernel_size=3, stride=1, padding=1)  # Output: 8x16x16
         self.conv2 = nn.Conv2d(8, 2, kernel_size=3, stride=1, padding=1)  # Output: 2x16x16
 
         # Pooling to reduce to 2x8x8
         self.pool = nn.MaxPool2d(2, 2)  # Output: 2x8x8
 
-        # Smaller fully connected layers
+
         self.fc1 = nn.Linear(2 * 8 * 8 + 13, 64)
         self.fc2 = nn.Linear(64, 1)
 
@@ -49,7 +49,6 @@ class ChessNN(nn.Module):
 def find_most_recent_model(directory):
     model_files = [f for f in os.listdir(directory) if f.endswith('.pth') and 'best_model_gen_' in f]
 
-    # Filter out files that do not match the expected pattern and extract generation numbers
     valid_files = []
     for f in model_files:
         parts = f.split('_')
@@ -66,8 +65,6 @@ def find_most_recent_model(directory):
     return os.path.join(directory, latest_model)
 
 
-
-# Create an instance of the ChessNN
 model = ChessNN()
 
 def initialize_population(size):
@@ -82,7 +79,6 @@ def evaluate_position(encoded_state):
     input_tensor = torch.FloatTensor(encoded_state).unsqueeze(0)  # [1, 269] shape for a single encoded state
     #print("Input tensor shape in evaluate_position:", input_tensor.shape)  # [1, 269]
 
-    # Feed the tensor into the neural network
     output = model(input_tensor)
     return output.item()
 
@@ -121,7 +117,6 @@ def choose_index_by_evaluation(evaluation_scores):
         # If all scores are zero, choose randomly
         return random.randint(0, len(evaluation_scores) - 1)
 
-    # Normalize scores to sum to 1 (if not already)
     normalized_scores = [score / total for score in evaluation_scores]
 
     # Choose an index based on these normalized weights
@@ -301,7 +296,7 @@ def evolve_models(generations, number_of_games):
 
         std_dev_fitness = np.std(fitness_scores)
         avg_win_fraction = np.mean(win_fractions)
-        avg_fitness = np.mean(fitness_scores)  # Calculate average fitness
+        avg_fitness = np.mean(fitness_scores)
 
         gen_best_fitness = max(fitness_scores)
         if gen_best_fitness > global_best_fitness:
