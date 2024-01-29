@@ -227,7 +227,7 @@ def mutate_model(model):
     # Choose mutation strategy
     mutation_strategy = random.choice(["original", "single_weight", "probabilistic"])
 
-    magnitude = 10 ** random.randint(-6,0)
+    magnitude = 10 ** random.randint(-2,0)
     total_weights = sum(p.numel() for p in model.parameters())
 
     with torch.no_grad():
@@ -282,8 +282,8 @@ global_best_fitness = -float('inf')
 
 def evolve_models(generations, number_of_games):
     global global_best_model, global_best_fitness
-    population_size = 10
-    top_n = 4
+    population_size = 50
+    top_n = 25
     population = initialize_population(population_size)
 
     for gen in range(generations):
