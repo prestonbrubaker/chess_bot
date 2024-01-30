@@ -127,7 +127,7 @@ def predict_moves(board):
         with torch.no_grad():
             predicted_score = model(input_board)
         
-        move_scores[move] = predicted_score.item()
+        move_scores[move] = predicted_score.item()  # Extract the scalar value correctly
         board.pop()
     
     # Rank moves based on scores
