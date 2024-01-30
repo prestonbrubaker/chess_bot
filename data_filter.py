@@ -1,39 +1,41 @@
-def read_and_filter_games(board_file, score_file, threshold):
+def process_files(board_file, score_file, threshold, board_output, score_output):
     with open(board_file, 'r') as bf, open(score_file, 'r') as sf, \
-         open("board_data_reformed.txt", 'w') as b_out, open("score_data_per_turn_reformed.txt", 'w') as s_out:
+         open(board_output, 'w') as b_out, open(score_output, 'w') as s_out:
 
-        board_game_data = []
-        score_game_data = []
-        total_games = 0
-        games_meeting_threshold = 0
+        board_game_data, score_game_data = [], []
+        total_score, turn_count = 0, 0
+        write_game = False
 
-        for b_line, s_line in zip(bf, sf):
-            if b_line.strip() and s_line.strip():  # Non-empty lines in both files
+        while True:
+            b_line = bf.readline()
+            s_line = sf.readline()
+
+            if not b_line or not s_line:  # End of file
+                break
+
+            if b_line.strip() and s_line.strip():  # Non-empty lines (moves and scores)
                 board_game_data.append(b_line)
                 score_game_data.append(s_line)
-            elif not b_line.strip() and not next(bf, '').strip():  # End of a game
-                total_games += 1
-                if score_game_data:  # Check if there are scores to process
-                    average_score = float(score_game_data[0].strip())  # Use the first score as representative
-                    if average_score >= threshold:
-                        games_meeting_threshold += 1
-                        for data in board_game_data:
-                            b_out.write(data)
-                        b_out.write("\n")  # Additional empty line for the end of the game
-                        for data in score_game_data:
-                            s_out.write(data)
-                        s_out.write("\n")  # Additional empty line for the end of the game
-                # Clear data for the next game
-                board_game_data = []
-                score_game_data = []
-
-        return games_meeting_threshold, total_games
+                total_score += float(s_line.strip())
+                turn_count += 1
+            elif b_line.strip() == '' and s_line.strip() == '':  # End of a game
+                if turn_count > 0 and (total_score / turn_count) >= threshold:
+                    write_game = True
+                if write_game:
+                    for bd, sd in zip(board_game_data, score_game_data):
+                        b_out.write(bd + "\n")
+                        s_out.write(sd + "\n")
+                    b_out.write("\n")  # Extra line for game separation
+                    s_out.write("\n")  # Extra line for game separation
+                # Reset for next game
+                board_game_data, score_game_data = [], []
+                total_score, turn_count = 0, 0
+                write_game = False
 
 def main():
-    threshold = 0.2
-    games_meeting_threshold, total_games = read_and_filter_games("board_data.txt", "score_data_per_turn.txt", threshold)
-    percentage = (games_meeting_threshold / total_games) * 100 if total_games > 0 else 0
-    print(f"Percentage of games meeting the threshold: {percentage:.3f}%")
+    threshold = 0.2  # Set your threshold
+    process_files("board_data.txt", "score_data_per_turn.txt", threshold,
+                  "board_data_reformed.txt", "score_data_per_turn_reformed.txt")
 
 if __name__ == "__main__":
     main()
