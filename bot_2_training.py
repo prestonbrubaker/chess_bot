@@ -22,10 +22,8 @@ class ChessDataset(Dataset):
                     board_tensor = torch.tensor(board_data, dtype=torch.float32) / 255.0  # Normalize to [0, 1]
                     self.board_data.append(board_tensor.unsqueeze(0))  # Add a channel dimension
 
-                    # Parse scores and convert to numerical values
-                    # Parse scores and convert to numerical values as Float
                     score = float(score_str.strip())
-                    self.scores.append(float(score))
+                    self.scores.append(score)
 
     def __len__(self):
         return len(self.board_data)
