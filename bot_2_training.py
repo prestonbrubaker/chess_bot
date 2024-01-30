@@ -13,8 +13,8 @@ class ChessDataset(Dataset):
             score_lines = score_file.read().split('\n\n')
 
             for board_str, score_str in zip(board_lines, score_lines):
-                # Parse board data and convert to tensors
-                board_data = [list(row) for row in board_str.split('\n')]
+                # Parse board data and convert to a 2D tensor
+                board_data = [list(row) for row in board_str.split('\n') if row]  # Skip empty rows
                 board_tensor = torch.tensor(board_data, dtype=torch.float32)
                 self.board_data.append(board_tensor)
 
@@ -39,14 +39,29 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=batch_size)
 
 # Define CNN model
-class ChessCNN(torch.nn.Module):
+class ChessCNN(nn.Module):
     def __init__(self):
         super(ChessCNN, self).__init__()
-        # Define your CNN architecture here
+        # Define the CNN layers
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3, padding=1)
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.fc1 = nn.Linear(in_features=32 * 8 * 8, out_features=128)
+        self.fc2 = nn.Linear(in_features=128, out_features=1)
 
     def forward(self, x):
-        # Implement the forward pass of your CNN
-        pass
+        # Apply convolutional and pooling layers
+        x = self.pool(nn.functional.relu(self.conv1(x)))
+        x = self.pool(nn.functional.relu(self.conv2(x)))
+        
+        # Reshape the tensor for fully connected layers
+        x = x.view(-1, 32 * 8 * 8)
+        
+        # Apply fully connected layers with ReLU activation
+        x = nn.functional.relu(self.fc1(x))
+        x = self.fc2(x)
+        
+        return x
 
 model = ChessCNN()
 
