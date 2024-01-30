@@ -23,34 +23,39 @@ def encode_board(board):
         piece = board.piece_at(square)
         encoded_piece = piece_mapping.get(piece, '0111')  # Default to reserved
         encoded_board.append(encoded_piece)
-        print(encoded_board)
+
     return encoded_board
 
 def create_2d_board(encoded_board):
     rows = []
     for i in range(0, len(encoded_board), 8):
-        row = []
+        row = ''
         for j in range(8):
             piece_code = encoded_board[i + j]
-            row.extend([piece_code[0:2], piece_code[2:4]])
-        rows.extend([row, row])
+            row += piece_code
+        rows.append(row)
+        rows.append(row)  # Duplicate the row for the 16x16 grid
     return rows
 
 def get_random_move(board):
     return random.choice(list(board.legal_moves))
 
 def main():
-    board = chess.Board()
-    with open("board_data.txt", "w") as file:
-        while not board.is_game_over():
-            encoded_board = encode_board(board)
-            two_d_board = create_2d_board(encoded_board)
-            for row in two_d_board:
-                file.write(" ".join(row) + "\n")
-            file.write("\n")
+    while True:  # Loop to continuously start new games
+        board = chess.Board()
+        game_over = False
+        with open("board_data.txt", "a") as file:  # Open in append mode
+            while not game_over:
+                encoded_board = encode_board(board)
+                two_d_board = create_2d_board(encoded_board)
+                for row in two_d_board:
+                    file.write(row + "\n")
 
-            chosen_move = get_random_move(board)
-            board.push(chosen_move)
+                chosen_move = get_random_move(board)
+                board.push(chosen_move)
+                game_over = board.is_game_over()
+
+            file.write("\n\n")  # Two empty lines between games
 
 if __name__ == "__main__":
     main()
