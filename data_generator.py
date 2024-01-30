@@ -41,7 +41,7 @@ def get_random_move(board):
     return random.choice(list(board.legal_moves))
 
 def main():
-    while True:  # Loop to continuously start new games
+    for _ in range(0, 100):  # Loop to continuously start new games
         board = chess.Board()
         game_over = False
         with open("board_data.txt", "a") as file:  # Open in append mode
