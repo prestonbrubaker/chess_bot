@@ -37,23 +37,31 @@ def create_2d_board(encoded_board):
         rows.append(row)  # Duplicate the row for the 16x16 grid
     return rows
 
-def get_random_move(board):
-    return random.choice(list(board.legal_moves))
+def calculate_white_score(board):
+    piece_values = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK: 5, chess.QUEEN: 9}
+    score = 0
+    for piece_type in piece_values:
+        # Count the difference in pieces from the starting count
+        score += piece_values[piece_type] * (board.pieces_count(piece_type, chess.BLACK) - chess.BaseBoard().pieces_count(piece_type, chess.BLACK))
+    return score
 
 def main():
-    for _ in range(0, 100):  # Loop to continuously start new games
+    for _ in range(100):  # Play 100 games
         board = chess.Board()
-        game_over = False
-        with open("board_data.txt", "a") as file:  # Open in append mode
-            while not game_over:
+        with open("board_data.txt", "a") as file:
+            while not board.is_game_over():
                 encoded_board = encode_board(board)
                 two_d_board = create_2d_board(encoded_board)
                 for row in two_d_board:
                     file.write(row + "\n")
+                file.write(" ")  # Single space between moves
 
                 chosen_move = get_random_move(board)
                 board.push(chosen_move)
-                game_over = board.is_game_over()
+
+                # Optionally, write the score after each move
+                white_score = calculate_white_score(board)
+                file.write(f"White's score: {white_score}\n")
 
             file.write("\n\n")  # Two empty lines between games
 
