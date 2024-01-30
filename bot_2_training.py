@@ -58,7 +58,7 @@ class ChessCNN(nn.Module):
         x = self.pool(nn.functional.relu(self.conv2(x)))
         
         # Reshape the tensor for fully connected layers
-        x = x.view(x.size(0), -1)  # Adjust the size here
+        x = x.view(-1, 32 * 4 * 4)  # Adjust the size here
         
         # Apply fully connected layers with ReLU activation
         x = nn.functional.relu(self.fc1(x))
@@ -79,9 +79,16 @@ for epoch in range(num_epochs):
     for batch in train_loader:
         inputs, labels = batch
         inputs = inputs.float()  # Convert input to Float data type
-        labels = labels.float()  # Convert labels to Float data type
+        
+        # Convert labels to Float data type, assuming labels are single float values
+        labels = torch.tensor(labels, dtype=torch.float32)  # Convert to tensor
+        
         optimizer.zero_grad()
         outputs = model(inputs)
+        
+        # Ensure the target size matches the input size by resizing labels
+        labels = labels.view_as(outputs)  # Reshape labels to match the size of outputs
+        
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
@@ -93,7 +100,15 @@ for epoch in range(num_epochs):
         for batch in val_loader:
             inputs, labels = batch
             inputs = inputs.float()
+            
+            # Convert labels to Float data type for validation as well
+            labels = torch.tensor(labels, dtype=torch.float32)  # Convert to tensor
+            
             outputs = model(inputs)
+            
+            # Resize labels for validation as well
+            labels = labels.view_as(outputs)
+            
             val_loss += criterion(outputs, labels).item()
     
     print(f"Epoch [{epoch+1}/{num_epochs}] - Validation Loss: {val_loss/len(val_loader)}")
