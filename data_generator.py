@@ -44,10 +44,18 @@ def get_random_move(board):
 
 def calculate_white_score(board):
     piece_values = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK: 5, chess.QUEEN: 9}
-    score = 0
-    for piece_type in piece_values:
-        # Count the difference in pieces from the starting count
-        score += piece_values[piece_type] * (board.pieces_count(piece_type, chess.BLACK) - chess.BaseBoard().pieces_count(piece_type, chess.BLACK))
+    # Initial counts of pieces for a standard chess game
+    initial_counts = {chess.PAWN: 8, chess.KNIGHT: 2, chess.BISHOP: 2, chess.ROOK: 2, chess.QUEEN: 1}
+
+    # Count the pieces currently on the board
+    current_counts = {chess.PAWN: 0, chess.KNIGHT: 0, chess.BISHOP: 0, chess.ROOK: 0, chess.QUEEN: 0}
+    for square in chess.SQUARES:
+        piece = board.piece_at(square)
+        if piece and piece.color == chess.BLACK:
+            current_counts[piece.piece_type] += 1
+
+    # Calculate the score based on the difference
+    score = sum(piece_values[piece_type] * (initial_counts[piece_type] - current_counts[piece_type]) for piece_type in piece_values)
     return score
 
 def main():
