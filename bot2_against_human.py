@@ -2,6 +2,7 @@ import chess
 import random
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 # Define CNN model
 class ChessCNN(nn.Module):
