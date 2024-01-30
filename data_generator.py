@@ -37,6 +37,11 @@ def create_2d_board(encoded_board):
         rows.append(row)  # Duplicate the row for the 16x16 grid
     return rows
 
+
+
+def get_random_move(board):
+    return random.choice(list(board.legal_moves))
+
 def calculate_white_score(board):
     piece_values = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK: 5, chess.QUEEN: 9}
     score = 0
