@@ -48,22 +48,23 @@ def calculate_white_score(board):
 def main():
     for _ in range(100):  # Play 100 games
         board = chess.Board()
-        with open("board_data.txt", "a") as file:
+        with open("board_data.txt", "a") as board_file, open("score_data.txt", "a") as score_file:
             while not board.is_game_over():
                 encoded_board = encode_board(board)
                 two_d_board = create_2d_board(encoded_board)
                 for row in two_d_board:
-                    file.write(row + "\n")
-                file.write(" ")  # Single space between moves
+                    board_file.write(row + "\n")
+                board_file.write(" ")  # Single space between moves
 
                 chosen_move = get_random_move(board)
                 board.push(chosen_move)
 
-                # Optionally, write the score after each move
+                # Write the score to the score file
                 white_score = calculate_white_score(board)
-                file.write(f"White's score: {white_score}\n")
+                score_file.write(f"{white_score}\n")
 
-            file.write("\n\n")  # Two empty lines between games
+            board_file.write("\n\n")  # Two empty lines between games in board file
+            score_file.write("\n\n")  # Two empty lines between games in score file
 
 if __name__ == "__main__":
     main()
