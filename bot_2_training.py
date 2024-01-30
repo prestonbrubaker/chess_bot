@@ -13,20 +13,23 @@ class ChessDataset(Dataset):
             score_lines = score_file.read().split('\n\n')
 
             for board_str, score_str in zip(board_lines, score_lines):
-                # Parse board data and convert to a 2D tensor
-                board_data = [[int(cell) for cell in row] for row in board_str.split('\n') if row]  # Convert to int
-                board_tensor = torch.tensor(board_data, dtype=torch.float32)
-                self.board_data.append(board_tensor)
+                # Check for empty lines in score data
+                if score_str.strip():
+                    # Parse board data and convert to a 2D tensor
+                    board_data = [[int(cell) for cell in row] for row in board_str.split('\n') if row]  # Convert to int
+                    board_tensor = torch.tensor(board_data, dtype=torch.float32)
+                    self.board_data.append(board_tensor)
 
-                # Parse scores and convert to numerical values
-                score = float(score_str.strip())
-                self.scores.append(score)
+                    # Parse scores and convert to numerical values
+                    score = float(score_str.strip())
+                    self.scores.append(score)
 
     def __len__(self):
         return len(self.board_data)
 
     def __getitem__(self, idx):
         return self.board_data[idx], self.scores[idx]
+
 
 # Load data
 dataset = ChessDataset('board_data.txt', 'score_data.txt')
