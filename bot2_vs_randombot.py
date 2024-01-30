@@ -21,7 +21,7 @@ class ChessDataset(Dataset):
                     # Parse board data into a tensor
                     board_data = [[int(cell) for cell in row] for row in board_str.split('\n') if row]
                     board_tensor = torch.tensor(board_data, dtype=torch.float32) / 255.0  # Normalize to [0, 1]
-                    self.board_data.append(board_tensor.unsqueeze(0))  # Add a channel dimension
+                    self.board_data.append(board_tensor)  # No need to add a channel dimension
 
                     score = float(score_str.strip())
                     self.scores.append(score)
@@ -108,20 +108,35 @@ def create_2d_board(encoded_board):
         rows.append(row)  # Duplicate the row for the 16x16 grid
     return rows
 
-def predict_move(board):
-    encoded_board = encode_board(board)
-    two_d_board = create_2d_board(encoded_board)
+def predict_moves(board):
+    legal_moves = list(board.legal_moves)
+    move_scores = {}
     
-    # Prepare the input tensor for the model
-    input_board = torch.tensor([list(map(int, row)) for row in two_d_board], dtype=torch.float32)
+    for move in legal_moves:
+        board.push(move)
+        encoded_board = encode_board(board)
+        two_d_board = create_2d_board(encoded_board)
     
-    # Reshape the input to [batch_size, channels, height, width]
-    input_board = input_board.unsqueeze(0).unsqueeze(0)  # Add batch and channel dimensions
+        # Prepare the input tensor for the model
+        input_board = torch.tensor([list(map(int, row)) for row in two_d_board], dtype=torch.float32)
     
-    # Use the model to predict the best move
-    with torch.no_grad():
-        predicted_score = model(input_board)
-    return predicted_score.item()
+        # Reshape the input to [batch_size, channels, height, width]
+        input_board = input_board.unsqueeze(0).unsqueeze(0)  # Add batch and channel dimensions
+    
+        # Use the model to predict the evaluation score
+        with torch.no_grad():
+            predicted_score = model(input_board)
+        
+        move_scores[move] = predicted_score.item()
+        board.pop()
+    
+    # Rank moves based on scores
+    ranked_moves = sorted(move_scores.items(), key=lambda x: x[1], reverse=True)
+    
+    # Select the move with the highest score
+    best_move, _ = ranked_moves[0]
+    
+    return best_move
 
 def main():
     wins = 0
@@ -133,16 +148,8 @@ def main():
         
         while not board.is_game_over():
             if board.turn == chess.WHITE:
-                # White's turn, use CNN to predict the move
-                best_move = None
-                best_score = -float('inf')
-                for move in board.legal_moves:
-                    board.push(move)
-                    score = predict_move(board)
-                    board.pop()
-                    if score > best_score:
-                        best_move = move
-                        best_score = score
+                # White's turn, use CNN to predict the best move
+                best_move = predict_moves(board)
                 board.push(best_move)
             else:
                 # Black's turn, random move
