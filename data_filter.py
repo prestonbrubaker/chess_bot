@@ -33,7 +33,7 @@ def process_files(board_file, score_file, threshold, board_output, score_output)
                 write_game = False
 
 def main():
-    threshold = 0.2  # Set your threshold
+    threshold = 0.14  # Set your threshold
     process_files("board_data.txt", "score_data_per_turn.txt", threshold,
                   "board_data_reformed.txt", "score_data_per_turn_reformed.txt")
 
