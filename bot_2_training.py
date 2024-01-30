@@ -78,6 +78,8 @@ for epoch in range(num_epochs):
     model.train()
     for batch in train_loader:
         inputs, labels = batch
+        inputs = inputs.float()  # Convert input to Float data type
+        labels = labels.float()  # Convert labels to Float data type
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, labels)
