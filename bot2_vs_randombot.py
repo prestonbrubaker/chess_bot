@@ -113,7 +113,9 @@ def predict_move(board):
     two_d_board = create_2d_board(encoded_board)
     
     # Prepare the input tensor for the model
-    input_board = torch.tensor([[list(map(int, row))] for row in two_d_board], dtype=torch.float32)
+    input_board = torch.tensor([list(map(int, row)) for row in two_d_board], dtype=torch.float32)
+    input_board = input_board.unsqueeze(0).unsqueeze(0)  # Add batch and channel dimensions
+
     
     # Use the model to predict the best move
     with torch.no_grad():
