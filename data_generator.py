@@ -51,7 +51,7 @@ def calculate_white_score(board):
     current_counts = {chess.PAWN: 0, chess.KNIGHT: 0, chess.BISHOP: 0, chess.ROOK: 0, chess.QUEEN: 0}
     for square in chess.SQUARES:
         piece = board.piece_at(square)
-        if piece and piece.color == chess.BLACK:
+        if piece and piece.color == chess.BLACK and piece.piece_type in current_counts:
             current_counts[piece.piece_type] += 1
 
     # Calculate the score based on the difference
