@@ -36,7 +36,7 @@ class ChessDataset(Dataset):
 dataset = ChessDataset('board_data.txt', 'score_data.txt')
 
 # Define data loaders
-batch_size = 200
+batch_size = 2000
 train_size = int(0.8 * len(dataset))
 train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, len(dataset) - train_size])
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -100,7 +100,7 @@ for epoch in range(num_epochs):
     print(f"Epoch [{epoch+1}/{num_epochs}] - Validation Loss: {val_loss/len(val_loader)}")
     with open("fitness_log.txt", 'a') as file:
         file.write(f"Epoch {epoch+1} - Validation Loss: {val_loss/len(val_loader)}\n")
-    if(epoch % 10 == 0):
+    if(epoch % 1 == 0):
         torch.save(model.state_dict(), 'chess_cnn_model.pth')
         print("MODEL SAVED")
 
