@@ -70,7 +70,7 @@ model = ChessCNN()
 
 # Define loss function and optimizer
 criterion = torch.nn.MSELoss()  # Use mean squared error for regression
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
 # Training loop
 num_epochs = 10000
@@ -97,7 +97,7 @@ for epoch in range(num_epochs):
     
     print(f"Epoch [{epoch+1}/{num_epochs}] - Validation Loss: {val_loss/len(val_loader)}")
     with open("fitness_log.txt", 'a') as file:
-        file.write(f"Epoch [{epoch+1}] - Validation Loss: {val_loss/len(val_loader)}\n")
+        file.write(f"Epoch {epoch+1} - Validation Loss: {val_loss/len(val_loader)}\n")
 
 # Save the trained model
 torch.save(model.state_dict(), 'chess_cnn_model.pth')
