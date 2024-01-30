@@ -1,68 +1,59 @@
 def read_average_scores(file_name, threshold):
     with open(file_name, 'r') as file:
         scores = []
-        current_score = ''
         for line in file:
-            if line.strip():
-                current_score = float(line.strip())
+            if line.strip():  # Each score line
+                score = float(line.strip())
+                if score >= threshold:
+                    scores.append(True)  # Mark this game to be included
+                else:
+                    scores.append(False)  # Mark this game to be excluded
             else:
-                if current_score and current_score >= threshold:
-                    scores.append(current_score)
-                current_score = ''
+                if not line.strip() and file.readline().strip() == '':
+                    scores.append('GameEnd')  # Mark the end of a game
         return scores
 
 def reformat_files(board_file, score_file, scores, board_output, score_output):
     with open(board_file, 'r') as bf, open(score_file, 'r') as sf, \
          open(board_output, 'w') as b_out, open(score_output, 'w') as s_out:
 
-        # Trackers for current game index and whether to include current game data
         game_index = 0
-        include_game = True
+        include_game = scores[game_index]  # Determine if the current game is to be included
 
         # Process board data
         for line in bf:
             if line.strip():
                 if include_game:
-                    b_out.write(line)
+                    b_out.write(line + "\n")
             else:
-                if bf.readline().strip() == '':
-                    if game_index < len(scores):
-                        include_game = True
-                        b_out.write("\n")
-                    else:
-                        include_game = False
+                b_out.write("\n")
+                if scores[game_index] == 'GameEnd':
                     game_index += 1
+                    include_game = game_index < len(scores) and scores[game_index]
 
-        # Reset trackers
+        # Reset game index for score data
         game_index = 0
-        include_game = True
+        include_game = scores[game_index]
 
         # Process score data
         for line in sf:
             if line.strip():
                 if include_game:
-                    s_out.write(line)
+                    s_out.write(line + "\n")
             else:
-                if sf.readline().strip() == '':
-                    if game_index < len(scores):
-                        include_game = True
-                        s_out.write("\n")
-                    else:
-                        include_game = False
+                s_out.write("\n")
+                if scores[game_index] == 'GameEnd':
                     game_index += 1
+                    include_game = game_index < len(scores) and scores[game_index]
 
 def main():
     threshold = 0.2
     average_scores = read_average_scores("score_data_per_turn.txt", threshold)
 
     # Calculate the percentage of games that meet or exceed the threshold
-    total_games = 0
-    with open("score_data_per_turn.txt", 'r') as file:
-        for line in file:
-            if line.strip() == '':
-                total_games += 1
-
-    percentage = (len(average_scores) / total_games) * 100 if total_games > 0 else 0
+    total_games = average_scores.count('GameEnd')
+    passing_games = average_scores.count(True)
+    percentage = (passing_games / total_games) * 100 if total_games > 0 else 0
     print(f"Percentage of games meeting the threshold: {percentage:.3f}%")
 
     reformat_files("board_data.txt", "score_data_per_turn.txt", average_scores,
