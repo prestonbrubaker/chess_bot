@@ -8,20 +8,21 @@ def read_and_filter_games(board_file, score_file, threshold):
         games_meeting_threshold = 0
 
         for b_line, s_line in zip(bf, sf):
-            if b_line.strip():  # Non-empty line in board file
+            if b_line.strip() and s_line.strip():  # Non-empty lines in both files
                 board_game_data.append(b_line)
                 score_game_data.append(s_line)
             elif not b_line.strip() and not next(bf, '').strip():  # End of a game
                 total_games += 1
-                average_score = float(score_game_data[-1].strip())
-                if average_score >= threshold:
-                    games_meeting_threshold += 1
-                    for data in board_game_data:
-                        b_out.write(data)
-                    for data in score_game_data:
-                        s_out.write(data)
-                    b_out.write("\n")
-                    s_out.write("\n")
+                if score_game_data:  # Check if there are scores to process
+                    average_score = float(score_game_data[-1].strip())
+                    if average_score >= threshold:
+                        games_meeting_threshold += 1
+                        for data in board_game_data:
+                            b_out.write(data)
+                        for data in score_game_data:
+                            s_out.write(data)
+                        b_out.write("\n")
+                        s_out.write("\n")
                 # Clear data for the next game
                 board_game_data = []
                 score_game_data = []
