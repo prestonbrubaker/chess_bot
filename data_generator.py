@@ -44,22 +44,22 @@ def get_random_move(board):
 
 def calculate_white_score(board):
     piece_values = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK: 5, chess.QUEEN: 9}
-    # Initial counts of pieces for a standard chess game
+    # Initial counts of black pieces for a standard chess game
     initial_counts = {chess.PAWN: 8, chess.KNIGHT: 2, chess.BISHOP: 2, chess.ROOK: 2, chess.QUEEN: 1}
 
-    # Count the pieces currently on the board
+    # Count the black pieces currently on the board
     current_counts = {chess.PAWN: 0, chess.KNIGHT: 0, chess.BISHOP: 0, chess.ROOK: 0, chess.QUEEN: 0}
     for square in chess.SQUARES:
         piece = board.piece_at(square)
         if piece and piece.color == chess.BLACK and piece.piece_type in current_counts:
             current_counts[piece.piece_type] += 1
 
-    # Calculate the score based on the difference
+    # Calculate the score based on the pieces white has captured
     score = sum(piece_values[piece_type] * (initial_counts[piece_type] - current_counts[piece_type]) for piece_type in piece_values)
     return score
 
 def main():
-    for _ in range(1000):  # Play 1,000 games
+    for _ in range(10000):  # Play 10,000 games
         board = chess.Board()
         with open("board_data.txt", "a") as board_file, open("score_data.txt", "a") as score_file:
             while not board.is_game_over():
