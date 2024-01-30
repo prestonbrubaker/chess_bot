@@ -52,7 +52,7 @@ def reformat_files(board_file, score_file, scores, board_output, score_output):
                     game_index += 1
 
 def main():
-    threshold = 0.01
+    threshold = 0.2
     average_scores = read_average_scores("score_data_per_turn.txt", threshold)
 
     # Calculate the percentage of games that meet or exceed the threshold
@@ -63,7 +63,7 @@ def main():
                 total_games += 1
 
     percentage = (len(average_scores) / total_games) * 100 if total_games > 0 else 0
-    print(f"Percentage of games meeting the threshold: {percentage:.2f}%")
+    print(f"Percentage of games meeting the threshold: {percentage:.3f}%")
 
     reformat_files("board_data.txt", "score_data_per_turn.txt", average_scores,
                    "board_data_reformed.txt", "score_data_per_turn_reformed.txt")
