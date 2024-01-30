@@ -14,7 +14,7 @@ class ChessDataset(Dataset):
 
             for board_str, score_str in zip(board_lines, score_lines):
                 # Parse board data and convert to a 2D tensor
-                board_data = [list(row) for row in board_str.split('\n') if row]  # Skip empty rows
+                board_data = [[int(cell) for cell in row] for row in board_str.split('\n') if row]  # Convert to int
                 board_tensor = torch.tensor(board_data, dtype=torch.float32)
                 self.board_data.append(board_tensor)
 
