@@ -73,7 +73,7 @@ criterion = torch.nn.MSELoss()  # Use mean squared error for regression
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 
 # Training loop
-num_epochs = 10000
+num_epochs = 10
 for epoch in range(num_epochs):
     model.train()
     for batch in train_loader:
@@ -82,6 +82,10 @@ for epoch in range(num_epochs):
         labels = labels.float()  # Convert labels to Float data type
         optimizer.zero_grad()
         outputs = model(inputs)
+        
+        # Ensure the target size matches the input size by resizing labels
+        labels = labels.view_as(outputs)  # Reshape labels to match the size of outputs
+        
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
@@ -92,11 +96,16 @@ for epoch in range(num_epochs):
         val_loss = 0.0
         for batch in val_loader:
             inputs, labels = batch
+            inputs = inputs.float()
             outputs = model(inputs)
+            
+            # Resize labels for validation as well
+            labels = labels.view_as(outputs)
+            
             val_loss += criterion(outputs, labels).item()
     
     print(f"Epoch [{epoch+1}/{num_epochs}] - Validation Loss: {val_loss/len(val_loader)}")
-    if(epoch % 10 == 0):
+    if epoch % 10 == 0:
         torch.save(model.state_dict(), 'chess_cnn_model.pth')
         print("Model Saved")
 
