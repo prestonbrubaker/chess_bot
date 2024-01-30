@@ -59,7 +59,7 @@ def calculate_white_score(board):
     return score
 
 def main():
-    for _ in range(100):  # Play 100 games
+    for _ in range(10000):  # Play 10,000 games
         board = chess.Board()
         with open("board_data.txt", "a") as board_file, open("score_data.txt", "a") as score_file:
             while not board.is_game_over():
