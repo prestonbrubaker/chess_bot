@@ -86,7 +86,10 @@ for epoch in range(num_epochs):
     for batch in train_loader:
         inputs, labels = batch
         inputs = inputs.float()  # Convert input to Float data type
-        labels = labels.float()  # Convert labels to Float data type
+        
+        # Convert labels to Float data type, assuming labels are single float values
+        labels = torch.tensor(labels, dtype=torch.float32)
+        
         optimizer.zero_grad()
         outputs = model(inputs)
         
@@ -104,6 +107,10 @@ for epoch in range(num_epochs):
         for batch in val_loader:
             inputs, labels = batch
             inputs = inputs.float()
+            
+            # Convert labels to Float data type for validation as well
+            labels = torch.tensor(labels, dtype=torch.float32)
+            
             outputs = model(inputs)
             
             # Resize labels for validation as well
