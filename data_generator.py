@@ -67,17 +67,17 @@ def main():
                 two_d_board = create_2d_board(encoded_board)
                 for row in two_d_board:
                     board_file.write(row + "\n")
-                board_file.write(" ")  # Single space between moves
+                board_file.write("\n")  # Single line between moves
 
                 chosen_move = get_random_move(board)
                 board.push(chosen_move)
 
                 # Write the score to the score file
                 white_score = calculate_white_score(board)
-                score_file.write(f"{white_score}\n")
+                score_file.write(f"{white_score}\n\n")
 
-            board_file.write("\n\n")  # Two empty lines between games in board file
-            score_file.write("\n\n")  # Two empty lines between games in score file
+            board_file.write("\n")  # Additional empty line between games in board file
+            score_file.write("\n")  # Additional empty line between games in score file
 
 if __name__ == "__main__":
     main()
