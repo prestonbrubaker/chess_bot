@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
-import numpy as np
+import numpy as nn
 
 # Custom dataset class
 class ChessDataset(Dataset):
