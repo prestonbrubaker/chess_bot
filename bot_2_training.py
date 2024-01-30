@@ -98,6 +98,9 @@ for epoch in range(num_epochs):
     print(f"Epoch [{epoch+1}/{num_epochs}] - Validation Loss: {val_loss/len(val_loader)}")
     with open("fitness_log.txt", 'a') as file:
         file.write(f"Epoch {epoch+1} - Validation Loss: {val_loss/len(val_loader)}\n")
+    if(epoch % 10 == 0):
+        torch.save(model.state_dict(), 'chess_cnn_model.pth')
+        print("MODEL SAVED")
 
 # Save the trained model
 torch.save(model.state_dict(), 'chess_cnn_model.pth')
