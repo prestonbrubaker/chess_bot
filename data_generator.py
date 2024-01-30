@@ -1,7 +1,6 @@
 import chess
 import random
 
-
 def encode_board(board):
     piece_mapping = {
         None: '0000',  # Empty square
@@ -37,41 +36,21 @@ def create_2d_board(encoded_board):
         rows.extend([row, row])
     return rows
 
-
 def get_random_move(board):
-    """Returns a random legal move for the current player."""
     return random.choice(list(board.legal_moves))
 
-def save_board_state_to_file(encoded_board, file):
-    with open(file, "a") as f:
-        f.write("".join(encoded_board) + "\n\n")
-
-def play_random_game():
+def main():
     board = chess.Board()
-    game_count = 0
+    with open("board_data.txt", "w") as file:
+        while not board.is_game_over():
+            encoded_board = encode_board(board)
+            two_d_board = create_2d_board(encoded_board)
+            for row in two_d_board:
+                file.write(" ".join(row) + "\n")
+            file.write("\n")
 
-    while not board.is_game_over():
-        if board.turn:
-            print("White's turn")
-        else:
-            print("Black's turn")
-
-        legal_moves = list(board.legal_moves)
-        chosen_move = get_random_move(board)
-        board.push(chosen_move)
-
-        encoded_board = encode_board(board)
-        create_2d = create_2d_board(encoded_board)
-
-        with open("board_data.txt", "a") as f:
-            f.write("Game {}:\n".format(game_count + 1))
-            for row in create_2d:
-                f.write("".join(row) + "\n")
-            f.write("\n")
-        
-        game_count += 1
+            chosen_move = get_random_move(board)
+            board.push(chosen_move)
 
 if __name__ == "__main__":
-    with open("board_data.txt", "w") as f:
-        f.write("")  # Clear the file if it exists
-    play_random_game()
+    main()
