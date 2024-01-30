@@ -23,7 +23,7 @@ def encode_board(board):
         piece = board.piece_at(square)
         encoded_piece = piece_mapping.get(piece, '0111')  # Default to reserved
         encoded_board.append(encoded_piece)
-
+        print(encoded_board)
     return encoded_board
 
 def create_2d_board(encoded_board):
