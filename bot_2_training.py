@@ -23,7 +23,14 @@ class ChessDataset(Dataset):
                     self.board_data.append(board_tensor.unsqueeze(0))  # Add a channel dimension
 
                     score = float(score_str.strip())
-                    self.scores.append(score)
+                    # Ensure that scores have the correct size
+                    self.scores.append([score])  # Wrap score in a list
+
+    def __len__(self):
+        return len(self.board_data)
+
+    def __getitem__(self, idx):
+        return self.board_data[idx], self.scores[idx]
 
     def __len__(self):
         return len(self.board_data)
