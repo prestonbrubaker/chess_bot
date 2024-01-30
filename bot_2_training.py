@@ -70,7 +70,7 @@ model = ChessCNN()
 
 # Define loss function and optimizer
 criterion = torch.nn.MSELoss()  # Use mean squared error for regression
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 
 # Training loop
 num_epochs = 10000
