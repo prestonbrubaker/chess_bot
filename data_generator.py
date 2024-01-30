@@ -28,6 +28,16 @@ def encode_board(board):
 
     return encoded_board
 
+def create_2d_board(encoded_board):
+    rows = []
+    for i in range(0, len(encoded_board), 8):
+        row = []
+        for j in range(8):
+            piece_code = encoded_board[i + j]
+            row.extend([piece_code[0:2], piece_code[2:4]])
+        rows.extend([row, row])
+    return rows
+
 
 def get_random_move(board):
   """Returns a random legal move for the current player."""
