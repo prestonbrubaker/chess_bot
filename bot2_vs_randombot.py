@@ -125,9 +125,27 @@ def predict_moves(board):
     
         # Use the model to predict the evaluation score
         with torch.no_grad():
-            predicted_score = model(input_board)
+            predicted_scores = model(input_board)
         
-        move_scores[move] = predicted_score.item()  # Extract the scalar value correctly
+        if predicted_scores.size(0) == 1:
+            predicted_score = predicted_scores.item()
+            move_scores[move] = predicted_score  # Extract the scalar value correctly
+        else:
+            # Handle cases where the model returns more than one score
+            # You can choose how to handle this based on your model's architecture
+            
+            # For example, you can take the average of all scores
+            # predicted_score = predicted_scores.mean().item()
+            
+            # Or choose the score that corresponds to the desired move if it's in the list
+            # predicted_score = predicted_scores[legal_moves.index(move)].item()
+            
+            # You should adapt this part based on your model's output
+            
+            # For simplicity, let's just take the first score
+            predicted_score = predicted_scores[0].item()
+            move_scores[move] = predicted_score
+        
         board.pop()
     
     # Rank moves based on scores
