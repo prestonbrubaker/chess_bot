@@ -80,21 +80,22 @@ for epoch in range(num_epochs):
     model.train()
     for batch in train_loader:
         inputs, labels = batch
-        inputs = inputs.float()  # Convert input to Float data type
-        labels = labels.float()  # Convert labels to Float data type
+        inputs = inputs.float() 
+        labels = labels.float()
         optimizer.zero_grad()
-        outputs = model(inputs)
+        outputs = model(inputs).squeeze(1)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
     
-    # Validation
     model.eval()
     with torch.no_grad():
         val_loss = 0.0
         for batch in val_loader:
             inputs, labels = batch
-            outputs = model(inputs)
+            inputs = inputs.float()
+            labels = labels.float()
+            outputs = model(inputs).squeeze(1)
             val_loss += criterion(outputs, labels).item()
     
     print(f"Epoch [{epoch+1}/{num_epochs}] - Validation Loss: {val_loss/len(val_loader)}")
