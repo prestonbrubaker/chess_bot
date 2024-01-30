@@ -1,5 +1,17 @@
 def read_average_scores(file_name, threshold):
-    # ... [No changes in this function]
+    with open(file_name, 'r') as file:
+        scores = []
+        for line in file:
+            if line.strip():  # Each score line
+                score = float(line.strip())
+                if score >= threshold:
+                    scores.append(True)  # Mark this game to be included
+                else:
+                    scores.append(False)  # Mark this game to be excluded
+            else:
+                if not line.strip() and file.readline().strip() == '':
+                    scores.append('GameEnd')  # Mark the end of a game
+        return scores
 
 def reformat_files(board_file, score_file, scores, board_output, score_output):
     with open(board_file, 'r') as bf, open(score_file, 'r') as sf, \
@@ -45,7 +57,18 @@ def reformat_files(board_file, score_file, scores, board_output, score_output):
                     include_game = game_index < len(scores) and scores[game_index]
 
 def main():
-    # ... [No changes in this function]
+    threshold = 0.2
+    average_scores = read_average_scores("score_data_per_turn.txt", threshold)
+
+    # Calculate the percentage of games that meet or exceed the threshold
+    total_games = average_scores.count('GameEnd')
+    passing_games = average_scores.count(True)
+    percentage = (passing_games / total_games) * 100 if total_games > 0 else 0
+    print(f"Percentage of games meeting the threshold: {percentage:.3f}%")
+
+    reformat_files("board_data.txt", "score_data_per_turn.txt", average_scores,
+                   "board_data_reformed.txt", "score_data_per_turn_reformed.txt")
+
 
 if __name__ == "__main__":
     main()
