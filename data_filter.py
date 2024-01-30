@@ -9,8 +9,8 @@ def read_and_filter_games(board_file, score_file, threshold):
 
         for b_line, s_line in zip(bf, sf):
             if b_line.strip() and s_line.strip():  # Non-empty lines in both files
-                board_game_data.append(b_line)
-                score_game_data.append(s_line)
+                board_game_data.append(b_line.strip() + "\n\n")  # Add single empty line between moves
+                score_game_data.append(s_line.strip() + "\n\n")  # Add single empty line between moves
             elif not b_line.strip() and not next(bf, '').strip():  # End of a game
                 total_games += 1
                 if score_game_data:  # Check if there are scores to process
@@ -21,8 +21,8 @@ def read_and_filter_games(board_file, score_file, threshold):
                             b_out.write(data)
                         for data in score_game_data:
                             s_out.write(data)
-                        b_out.write("\n")
-                        s_out.write("\n")
+                        b_out.write("\n")  # Additional empty line for the end of the game
+                        s_out.write("\n")  # Additional empty line for the end of the game
                 # Clear data for the next game
                 board_game_data = []
                 score_game_data = []
