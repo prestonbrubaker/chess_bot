@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
-import torch.nn as nn
+import numpy as nn
 
 # Custom dataset class
 class ChessDataset(Dataset):
@@ -15,10 +15,10 @@ class ChessDataset(Dataset):
             for board_str, score_str in zip(board_lines, score_lines):
                 # Check for empty lines in score data
                 if score_str.strip():
-                    # Parse board data and convert to a 2D tensor
-                    board_data = [[int(cell) for cell in row] for row in board_str.split('\n') if row]  # Convert to int
-                    board_tensor = torch.tensor(board_data, dtype=torch.float32)
-                    self.board_data.append(board_tensor)
+                    # Parse board data into a tensor
+                    board_data = [[int(cell) for cell in row] for row in board_str.split('\n') if row]
+                    board_tensor = torch.tensor(board_data, dtype=torch.float32) / 255.0  # Normalize to [0, 1]
+                    self.board_data.append(board_tensor.unsqueeze(0))  # Add a channel dimension
 
                     # Parse scores and convert to numerical values
                     score = float(score_str.strip())
@@ -29,7 +29,6 @@ class ChessDataset(Dataset):
 
     def __getitem__(self, idx):
         return self.board_data[idx], self.scores[idx]
-
 
 # Load data
 dataset = ChessDataset('board_data.txt', 'score_data.txt')
@@ -97,4 +96,3 @@ for epoch in range(num_epochs):
 
 # Save the trained model
 torch.save(model.state_dict(), 'chess_cnn_model.pth')
-
