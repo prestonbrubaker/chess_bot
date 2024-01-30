@@ -19,7 +19,7 @@ class ChessDataset(Dataset):
                 if score_str.strip():
                     # Parse board data into a tensor
                     board_data = [[int(cell) for cell in row] for row in board_str.split('\n') if row]
-                    board_tensor = torch.tensor(board_data, dtype=torch.float32) / 255.0  # Normalize to [0, 1]
+                    board_tensor = torch.tensor(board_data, dtype=torch.float32)
                     self.board_data.append(board_tensor.unsqueeze(0))  # Add a channel dimension
 
                     score = float(score_str.strip())
