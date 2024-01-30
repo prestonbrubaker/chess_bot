@@ -98,6 +98,7 @@ for epoch in range(num_epochs):
     print(f"Epoch [{epoch+1}/{num_epochs}] - Validation Loss: {val_loss/len(val_loader)}")
     if(epoch % 10 == 0):
         torch.save(model.state_dict(), 'chess_cnn_model.pth')
+        print("Model Saved")
 
 # Save the trained model
 torch.save(model.state_dict(), 'chess_cnn_model.pth')
