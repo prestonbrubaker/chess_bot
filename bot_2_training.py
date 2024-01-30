@@ -77,7 +77,7 @@ model = ChessCNN()
 
 # Define loss function and optimizer
 criterion = torch.nn.MSELoss()  # Use mean squared error for regression
-optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
 # Training loop
 num_epochs = 10
@@ -88,7 +88,8 @@ for epoch in range(num_epochs):
         inputs = inputs.float()  # Convert input to Float data type
         
         # Convert labels to Float data type, assuming labels are single float values
-        labels = torch.tensor(labels, dtype=torch.float32)
+        labels = [torch.tensor(score, dtype=torch.float32) for score in labels]
+        labels = torch.stack(labels)  # Stack the individual tensors
         
         optimizer.zero_grad()
         outputs = model(inputs)
@@ -109,7 +110,8 @@ for epoch in range(num_epochs):
             inputs = inputs.float()
             
             # Convert labels to Float data type for validation as well
-            labels = torch.tensor(labels, dtype=torch.float32)
+            labels = [torch.tensor(score, dtype=torch.float32) for score in labels]
+            labels = torch.stack(labels)  # Stack the individual tensors
             
             outputs = model(inputs)
             
