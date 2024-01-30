@@ -108,7 +108,18 @@ def predict_moves(board):
             predicted_score = predicted_scores[0].item()
             move_scores[move] = predicted_score
         
+        # Print the score for the current move
+        print(f"Move {move.uci()} - Predicted Score: {predicted_score}")
+        
         board.pop()
+    
+    # Rank moves based on scores
+    ranked_moves = sorted(move_scores.items(), key=lambda x: x[1], reverse=True)
+    
+    # Select the move with the highest score
+    best_move, _ = ranked_moves[0]
+    
+    return best_move
     
     # Rank moves based on scores
     ranked_moves = sorted(move_scores.items(), key=lambda x: x[1], reverse=True)
