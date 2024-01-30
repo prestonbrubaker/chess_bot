@@ -24,9 +24,9 @@ def main():
                     score_output.write('\n\n')
                 else:
                     # Remove the game data if it doesn't meet the threshold
-                    board_output.seek(board_output.tell() - len(board_game))  # Go back to the start of the game data
+                    board_output.seek(board_output.tell() - len(board_line))  # Go back to the start of the game data
                     board_output.truncate()  # Remove the game data
-                    score_output.seek(score_output.tell() - len(score_game))  # Go back to the start of the game data
+                    score_output.seek(score_output.tell() - len(score_line))  # Go back to the start of the game data
                     score_output.truncate()  # Remove the game data
                 game_average = 0.0  # Reset for the next game
                 game_turns = 0
