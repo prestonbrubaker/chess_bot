@@ -114,12 +114,13 @@ def predict_move(board):
     
     # Prepare the input tensor for the model
     input_board = torch.tensor([list(map(int, row)) for row in two_d_board], dtype=torch.float32)
+    
+    # Reshape the input to [batch_size, channels, height, width]
     input_board = input_board.unsqueeze(0).unsqueeze(0)  # Add batch and channel dimensions
-
     
     # Use the model to predict the best move
     with torch.no_grad():
-        predicted_score = model(input_board.unsqueeze(0))  # Add batch dimension
+        predicted_score = model(input_board)
     return predicted_score.item()
 
 def main():
