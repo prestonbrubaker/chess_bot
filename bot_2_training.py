@@ -70,7 +70,12 @@ class ChessCNN(nn.Module):
         
         return x
 
+# Check if CUDA (GPU support) is available, else use CPU
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("Using device:", device)
 model = ChessCNN()
+
+model.to(device)  # Move the model to the GPU if available
 
 # Define loss function and optimizer
 criterion = torch.nn.MSELoss()  # Use mean squared error for regression
@@ -82,6 +87,7 @@ for epoch in range(num_epochs):
     model.train()
     for batch in train_loader:
         inputs, labels = batch
+        inputs, labels = inputs.to(device), labels.to(device)  # Move data to GPU
         inputs = inputs.float()  # Convert input to Float data type
         labels = labels.float()  # Convert labels to Float data type
         optimizer.zero_grad()
@@ -96,6 +102,7 @@ for epoch in range(num_epochs):
         val_loss = 0.0
         for batch in val_loader:
             inputs, labels = batch
+            inputs, labels = inputs.to(device), labels.to(device)  # Move data to GPU
             outputs = model(inputs)
             val_loss += criterion(outputs, labels).item()
     
