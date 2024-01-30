@@ -46,14 +46,13 @@ val_loader = DataLoader(val_dataset, batch_size=batch_size)
 class ChessCNN(nn.Module):
     def __init__(self):
         super(ChessCNN, self).__init__()
-        # Define the CNN layers with kernel size of 2
+        # Define the CNN layers
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=2, padding=0)
         self.conv2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=2, padding=0)
         self.conv3 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=2, padding=0)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
         # Adjusted input size for the fully connected layer
-        # The output size depends on the number of layers and pooling operations
-        self.fc1 = nn.Linear(in_features=64 * 2 * 2, out_features=128)
+        self.fc1 = nn.Linear(in_features=64, out_features=128)  # Corrected input size
         self.fc2 = nn.Linear(in_features=128, out_features=1)
 
     def forward(self, x):
@@ -63,7 +62,7 @@ class ChessCNN(nn.Module):
         x = self.pool(F.relu(self.conv3(x)))
         
         # Reshape the tensor for the fully connected layers
-        x = x.view(-1, 64 * 2 * 2)
+        x = x.view(-1, 64)  # Corrected size
         
         # Apply fully connected layers with ReLU activation
         x = F.relu(self.fc1(x))
