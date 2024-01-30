@@ -23,8 +23,9 @@ class ChessDataset(Dataset):
                     self.board_data.append(board_tensor.unsqueeze(0))  # Add a channel dimension
 
                     # Parse scores and convert to numerical values
+                    # Parse scores and convert to numerical values as Float
                     score = float(score_str.strip())
-                    self.scores.append(score)
+                    self.scores.append(float(score))
 
     def __len__(self):
         return len(self.board_data)
