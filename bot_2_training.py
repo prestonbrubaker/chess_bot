@@ -8,8 +8,7 @@ import torch.nn.functional as F
 # Custom dataset class
 class ChessDataset(Dataset):
     def __init__(self, board_file_path, score_file_path):
-        self.board_data = []
-        self.scores = []
+        # ... existing code ...
 
         with open(board_file_path, 'r') as board_file, open(score_file_path, 'r') as score_file:
             board_lines = board_file.read().split('\n\n')
@@ -17,13 +16,14 @@ class ChessDataset(Dataset):
 
             for board_str, score_str in zip(board_lines, score_lines):
                 if score_str.strip():  # Check for empty lines in score data
-                    # Parse board data into a tensor
-                    board_data = [[int(cell) for cell in row] for row in board_str.split('\n') if row]
-                    if len(board_data) != 16:
+                    board_rows = board_str.split('\n')
+                    if len(board_rows) != 16:
                         raise ValueError("Board data does not have 16 rows")
+                    board_data = [[int(cell) for cell in row.strip()] for row in board_rows]
                     board_tensor = torch.tensor(board_data, dtype=torch.float32)
-                    self.board_data.append(board_tensor.unsqueeze(0))  # Add a channel dimension
-
+                    if board_tensor.shape != (16, 16):
+                        raise ValueError(f"Incorrect board shape: {board_tensor.shape}")
+                    self.board_data.append(board_tensor.unsqueeze(0))
                     score = float(score_str.strip())
                     self.scores.append(score)
 
