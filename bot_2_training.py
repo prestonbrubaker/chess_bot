@@ -36,7 +36,7 @@ class ChessDataset(Dataset):
 dataset = ChessDataset('board_data.txt', 'score_data.txt')
 
 # Define data loaders
-batch_size = 10000
+batch_size = 100
 train_size = int(0.8 * len(dataset))
 train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, len(dataset) - train_size])
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -84,7 +84,7 @@ model.to(device)  # Move the model to the GPU if available
 
 # Define loss function and optimizer
 criterion = torch.nn.MSELoss()  # Use mean squared error for regression
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.00001)
 
 # Training loop
 num_epochs = 10000
