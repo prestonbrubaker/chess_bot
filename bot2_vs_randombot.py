@@ -36,35 +36,35 @@ class ChessDataset(Dataset):
 
 # Define CNN model
 class ChessCNN(nn.Module):
-    def __init__(self):
+    def __init__(self, input_size=(16, 16)):
         super(ChessCNN, self).__init__()
-        # Define the CNN layers
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=2, kernel_size=2, padding=0)
-        self.conv2 = nn.Conv2d(in_channels=2, out_channels=2, kernel_size=2, padding=0)
-        self.conv3 = nn.Conv2d(in_channels=2, out_channels=2, kernel_size=2, padding=0)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=2, stride=1, padding=0)
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=2, stride=1, padding=0)
+        self.conv3 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=2, stride=1, padding=0)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
-        # Adjusted input size for the fully connected layer
-        self.fc1 = nn.Linear(in_features=2, out_features=128)  # Corrected input size
-        self.fc2 = nn.Linear(in_features=128, out_features=1)
+
+        # Calculate size after convolutions and pooling
+        self.final_conv_size = self._get_conv_output(input_size)
+
+        # Fully connected layers
+        self.fc1 = nn.Linear(self.final_conv_size, 128)
+        self.fc2 = nn.Linear(128, 1)
+
+    def _get_conv_output(self, shape):
+        with torch.no_grad():
+            input = torch.autograd.Variable(torch.rand(1, *shape))
+            output = self.pool(F.relu(self.conv1(input)))
+            output = self.pool(F.relu(self.conv2(output)))
+            output = self.pool(F.relu(self.conv3(output)))
+            return int(numpy.prod(output.size()))
 
     def forward(self, x):
-        # Debugging print
-        #print(f"Input to CNN shape: {x.shape}")
-
         x = self.pool(F.relu(self.conv1(x)))
-        # Debugging print
-        #print(f"After first convolution shape: {x.shape}")
-        # Apply convolutional and pooling layers
         x = self.pool(F.relu(self.conv2(x)))
         x = self.pool(F.relu(self.conv3(x)))
-        
-        # Reshape the tensor for the fully connected layers
-        x = x.view(-1, 2)  # Corrected size
-        
-        # Apply fully connected layers with ReLU activation
+        x = x.view(-1, self.final_conv_size)  # Flatten the tensor
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
-        
         return x
 
 # Load the trained CNN model
