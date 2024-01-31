@@ -84,7 +84,7 @@ model.to(device)  # Move the model to the GPU if available
 
 # Define loss function and optimizer
 criterion = torch.nn.MSELoss()  # Use mean squared error for regression
-optimizer = torch.optim.Adam(model.parameters(), lr=0.000005)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.1)
 
 # Training loop
 num_epochs = 10000
