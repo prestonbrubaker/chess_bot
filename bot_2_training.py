@@ -30,6 +30,8 @@ class ChessDataset(Dataset):
         return len(self.board_data)
 
     def __getitem__(self, idx):
+        board, score = self.board_data[idx], self.scores[idx]
+        print(f"Sample board shape: {board.shape}, Sample score: {score}")
         return self.board_data[idx], self.scores[idx]
 
 # Load data
