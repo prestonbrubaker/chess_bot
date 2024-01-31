@@ -185,7 +185,7 @@ def main():
         else:
             draws += 1
             print("Draw")
-         print(f"Wins: {wins}, Draws: {draws}, Losses: {losses}, Games: {_}")
+        print(f"Wins: {wins}, Draws: {draws}, Losses: {losses}, Games: {_}")
 
     print(f"Wins: {wins}, Draws: {draws}, Losses: {losses}")
 
