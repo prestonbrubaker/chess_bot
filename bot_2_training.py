@@ -16,15 +16,26 @@ class ChessDataset(Dataset):
             score_lines = score_file.read().split('\n\n')
 
             for board_str, score_str in zip(board_lines, score_lines):
-                # Check for empty lines in score data
-                if score_str.strip():
+                if score_str.strip():  # Check for empty lines in score data
                     # Parse board data into a tensor
                     board_data = [[int(cell) for cell in row] for row in board_str.split('\n') if row]
+                    if len(board_data) != 16:
+                        raise ValueError("Board data does not have 16 rows")
                     board_tensor = torch.tensor(board_data, dtype=torch.float32)
                     self.board_data.append(board_tensor.unsqueeze(0))  # Add a channel dimension
 
                     score = float(score_str.strip())
                     self.scores.append(score)
+
+    def __getitem__(self, idx):
+        board_tensor = self.board_data[idx]  # Already processed tensor
+        score = self.scores[idx]
+
+        # Ensure the board tensor is 16x16
+        if board_tensor.shape != (1, 16, 16):
+            raise ValueError(f"Board tensor shape is not 16x16: {board_tensor.shape}")
+
+        return board_tensor, score
 
     def __len__(self):
         return len(self.board_data)
