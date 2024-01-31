@@ -39,12 +39,12 @@ class ChessCNN(nn.Module):
     def __init__(self):
         super(ChessCNN, self).__init__()
         # Define the CNN layers
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=2, padding=0)
-        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=2, padding=0)
-        self.conv3 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=2, padding=0)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=2, kernel_size=2, padding=0)
+        self.conv2 = nn.Conv2d(in_channels=2, out_channels=2, kernel_size=2, padding=0)
+        self.conv3 = nn.Conv2d(in_channels=2, out_channels=2, kernel_size=2, padding=0)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
         # Adjusted input size for the fully connected layer
-        self.fc1 = nn.Linear(in_features=64, out_features=128)  # Corrected input size
+        self.fc1 = nn.Linear(in_features=2, out_features=128)  # Corrected input size
         self.fc2 = nn.Linear(in_features=128, out_features=1)
 
     def forward(self, x):
@@ -59,7 +59,7 @@ class ChessCNN(nn.Module):
         x = self.pool(F.relu(self.conv3(x)))
         
         # Reshape the tensor for the fully connected layers
-        x = x.view(-1, 64)  # Corrected size
+        x = x.view(-1, 2)  # Corrected size
         
         # Apply fully connected layers with ReLU activation
         x = F.relu(self.fc1(x))
