@@ -36,7 +36,7 @@ class ChessDataset(Dataset):
 dataset = ChessDataset('board_data.txt', 'score_data.txt')
 
 # Define data loaders
-batch_size = 100
+batch_size = 250
 train_size = int(0.8 * len(dataset))
 train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, len(dataset) - train_size])
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
