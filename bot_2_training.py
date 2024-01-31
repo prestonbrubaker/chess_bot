@@ -4,7 +4,7 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 
-LOAD_SAVED_MODEL = False
+LOAD_SAVED_MODEL = True
 MODEL_SAVE_PATH = 'chess_cnn_model.pth'
 
 # Custom dataset class
@@ -83,7 +83,12 @@ class ChessCNN(nn.Module):
 def load_model_if_available(model, path):
     if LOAD_SAVED_MODEL and os.path.isfile(path):
         model.load_state_dict(torch.load(path))
-        print(f"Loaded model from {path}")
+        print(f"Loaded model from {path}.")
+    else:
+        if LOAD_SAVED_MODEL:
+            print(f"No saved model found at {path}. Starting with a new model.")
+        else:
+            print("LOAD_SAVED_MODEL is set to False. Starting with a new model.")
     return model
 
 # Check if CUDA (GPU support) is available, else use CPU
