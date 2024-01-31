@@ -8,7 +8,8 @@ import torch.nn.functional as F
 # Custom dataset class
 class ChessDataset(Dataset):
     def __init__(self, board_file_path, score_file_path):
-        # ... existing code ...
+        self.board_data = []
+        self.scores = []
 
         with open(board_file_path, 'r') as board_file, open(score_file_path, 'r') as score_file:
             board_lines = board_file.read().split('\n\n')
@@ -16,30 +17,20 @@ class ChessDataset(Dataset):
 
             for board_str, score_str in zip(board_lines, score_lines):
                 if score_str.strip():  # Check for empty lines in score data
-                    board_rows = board_str.split('\n')
+                    board_rows = board_str.strip().split('\n')
                     if len(board_rows) != 16:
-                        raise ValueError("Board data does not have 16 rows")
+                        continue  # Skip incorrect board sizes
                     board_data = [[int(cell) for cell in row.strip()] for row in board_rows]
                     board_tensor = torch.tensor(board_data, dtype=torch.float32)
-                    if board_tensor.shape != (16, 16):
-                        raise ValueError(f"Incorrect board shape: {board_tensor.shape}")
-                    self.board_data.append(board_tensor.unsqueeze(0))
+                    self.board_data.append(board_tensor.unsqueeze(0))  # Add channel dimension
                     score = float(score_str.strip())
                     self.scores.append(score)
 
+    def __getitem__(self, idx):
+        return self.board_data[idx], self.scores[idx]
+
     def __len__(self):
         return len(self.board_data)
-        
-    def __getitem__(self, idx):
-        board_tensor = self.board_data[idx]  # Already processed tensor
-        score = self.scores[idx]
-
-        # Ensure the board tensor is 16x16
-        if board_tensor.shape != (1, 16, 16):
-            raise ValueError(f"Board tensor shape is not 16x16: {board_tensor.shape}")
-
-        return board_tensor, score
-
 
 # Load data
 dataset = ChessDataset('board_data.txt', 'score_data.txt')
@@ -104,16 +95,6 @@ for epoch in range(num_epochs):
         inputs, labels = inputs.to(device), labels.to(device)  # Move data to GPU
         inputs = inputs.float()  # Convert input to Float data type
         labels = labels.float()  # Convert labels to Float data type
-
-        # Debugging print
-        print(f"Epoch {epoch+1}, Batch {batch_idx+1}, Input shape: {inputs.shape}, Labels shape: {labels.shape}")
-
-        optimizer.zero_grad()
-        outputs = model(inputs)
-
-        # Debugging print
-        print(f"Model output shape: {outputs.shape}")
-        
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, labels)
@@ -130,7 +111,6 @@ for epoch in range(num_epochs):
             outputs = model(inputs)
             val_loss += criterion(outputs, labels).item()
     
-    print(f"Epoch [{epoch+1}/{num_epochs}] - Validation Loss: {val_loss/len(val_loader)}")
     with open("fitness_log.txt", 'a') as file:
         file.write(f"Epoch {epoch+1} - Validation Loss: {val_loss/len(val_loader)}\n")
     if(epoch % 1 == 0):
