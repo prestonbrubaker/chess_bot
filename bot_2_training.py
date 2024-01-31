@@ -3,6 +3,7 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
+import os
 
 LOAD_SAVED_MODEL = True
 MODEL_SAVE_PATH = 'chess_cnn_model.pth'
