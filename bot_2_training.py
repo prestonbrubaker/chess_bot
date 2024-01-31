@@ -27,6 +27,9 @@ class ChessDataset(Dataset):
                     score = float(score_str.strip())
                     self.scores.append(score)
 
+    def __len__(self):
+        return len(self.board_data)
+        
     def __getitem__(self, idx):
         board_tensor = self.board_data[idx]  # Already processed tensor
         score = self.scores[idx]
@@ -36,9 +39,6 @@ class ChessDataset(Dataset):
             raise ValueError(f"Board tensor shape is not 16x16: {board_tensor.shape}")
 
         return board_tensor, score
-
-    def __len__(self):
-        return len(self.board_data)
 
 
 # Load data
