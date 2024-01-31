@@ -161,7 +161,7 @@ def main():
     draws = 0
     losses = 0
     
-    for _ in range(10):  # Play 10 games
+    for _ in range(1000):  # Play 1000 games
         board = chess.Board()
         
         while not board.is_game_over():
