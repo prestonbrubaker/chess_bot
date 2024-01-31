@@ -4,6 +4,7 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 import os
+import numpy
 
 LOAD_SAVED_MODEL = True
 MODEL_SAVE_PATH = 'chess_cnn_model.pth'
