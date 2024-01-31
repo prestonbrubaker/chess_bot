@@ -32,15 +32,6 @@ class ChessDataset(Dataset):
     def __getitem__(self, idx):
         return self.board_data[idx], self.scores[idx]
 
-# Load data
-dataset = ChessDataset('board_data.txt', 'score_data_per_turn.txt')
-
-# Define data loaders
-batch_size = 32
-train_size = int(0.8 * len(dataset))
-train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, len(dataset) - train_size])
-train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-val_loader = DataLoader(val_dataset, batch_size=batch_size)
 
 # Define CNN model
 class ChessCNN(nn.Module):
