@@ -110,7 +110,7 @@ for epoch in range(num_epochs):
             inputs, labels = inputs.to(device), labels.to(device)  # Move data to GPU
             outputs = model(inputs)
             val_loss += criterion(outputs, labels).item()
-    
+    print(f"Epoch {epoch+1} - Validation Loss: {val_loss/len(val_loader)}\n")
     with open("fitness_log.txt", 'a') as file:
         file.write(f"Epoch {epoch+1} - Validation Loss: {val_loss/len(val_loader)}\n")
     if(epoch % 1 == 0):
