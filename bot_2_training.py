@@ -30,10 +30,11 @@ class ChessDataset(Dataset):
         return len(self.board_data)
 
     def __getitem__(self, idx):
-        board_tensor = self.board_data[idx]  # Already a tensor, no need to process as a string
+        board_tensor = self.board_data[idx]  # Already processed tensor
         score = self.scores[idx]
-    
-        print(f"Sample board shape: {board_tensor.shape}, Sample score: {score}")  # Debugging print
+
+        # Debugging print
+        print(f"Sample board shape: {board_tensor.shape}, Sample score: {score}")
         return board_tensor, score
 
 # Load data
@@ -60,8 +61,13 @@ class ChessCNN(nn.Module):
         self.fc2 = nn.Linear(in_features=128, out_features=1)
 
     def forward(self, x):
-        # Apply convolutional and pooling layers
+        # Debugging print
+        print(f"Input to CNN shape: {x.shape}")
+
         x = self.pool(F.relu(self.conv1(x)))
+        # Debugging print
+        print(f"After first convolution shape: {x.shape}")
+        # Apply convolutional and pooling layers
         x = self.pool(F.relu(self.conv2(x)))
         x = self.pool(F.relu(self.conv3(x)))
         
@@ -95,9 +101,14 @@ for epoch in range(num_epochs):
         inputs = inputs.float()  # Convert input to Float data type
         labels = labels.float()  # Convert labels to Float data type
 
-        # Debugging print statement
-        if batch_idx == 0:  # Print for the first batch of each epoch
-            print(f"Epoch {epoch+1}, Batch {batch_idx+1}, Input shape: {inputs.shape}, Labels shape: {labels.shape}", flush=True)
+        # Debugging print
+        print(f"Epoch {epoch+1}, Batch {batch_idx+1}, Input shape: {inputs.shape}, Labels shape: {labels.shape}")
+
+        optimizer.zero_grad()
+        outputs = model(inputs)
+
+        # Debugging print
+        print(f"Model output shape: {outputs.shape}")
         
         optimizer.zero_grad()
         outputs = model(inputs)
