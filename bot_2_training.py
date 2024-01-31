@@ -30,15 +30,11 @@ class ChessDataset(Dataset):
         return len(self.board_data)
 
     def __getitem__(self, idx):
-        board_str = self.board_data[idx]
-        print(f"Board string (before processing): {board_str}")  # Debugging print
+        board_tensor = self.board_data[idx]  # Already a tensor, no need to process as a string
+        score = self.scores[idx]
     
-        # Process the board string
-        board_data = [[int(cell) for cell in row[:16]] for row in board_str.split('\n') if row]
-        board_tensor = torch.tensor(board_data, dtype=torch.float32).unsqueeze(0)
-    
-        print(f"Processed board shape: {board_tensor.shape}, Sample score: {self.scores[idx]}")  # Debugging print
-        return board_tensor, self.scores[idx]
+        print(f"Sample board shape: {board_tensor.shape}, Sample score: {score}")  # Debugging print
+        return board_tensor, score
 
 # Load data
 dataset = ChessDataset('board_data.txt', 'score_data.txt')
