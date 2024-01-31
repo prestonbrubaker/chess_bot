@@ -57,7 +57,7 @@ class ChessCNN(nn.Module):
 
     def forward(self, x):
         # Debugging print
-        print(f"Input to CNN shape: {x.shape}")
+        #print(f"Input to CNN shape: {x.shape}")
 
         x = self.pool(F.relu(self.conv1(x)))
         # Debugging print
