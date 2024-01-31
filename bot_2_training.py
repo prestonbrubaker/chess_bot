@@ -40,13 +40,6 @@ class ChessDataset(Dataset):
     def __len__(self):
         return len(self.board_data)
 
-    def __getitem__(self, idx):
-        board_tensor = self.board_data[idx]  # Already processed tensor
-        score = self.scores[idx]
-
-        # Debugging print
-        print(f"Sample board shape: {board_tensor.shape}, Sample score: {score}")
-        return board_tensor, score
 
 # Load data
 dataset = ChessDataset('board_data.txt', 'score_data.txt')
