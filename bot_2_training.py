@@ -4,6 +4,8 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 
+LOAD_SAVED_MODEL = False
+MODEL_SAVE_PATH = 'chess_cnn_model.pth'
 
 # Custom dataset class
 class ChessDataset(Dataset):
@@ -75,16 +77,28 @@ class ChessCNN(nn.Module):
         
         return x
 
+
+
+
+def load_model_if_available(model, path):
+    if LOAD_SAVED_MODEL and os.path.isfile(path):
+        model.load_state_dict(torch.load(path))
+        print(f"Loaded model from {path}")
+    return model
+
 # Check if CUDA (GPU support) is available, else use CPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
 model = ChessCNN()
-
+model = load_model_if_available(model, MODEL_SAVE_PATH)
 model.to(device)  # Move the model to the GPU if available
 
 # Define loss function and optimizer
 criterion = torch.nn.MSELoss()  # Use mean squared error for regression
-optimizer = torch.optim.Adam(model.parameters(), lr=0.1)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+
+
+
 
 # Training loop
 num_epochs = 10000
