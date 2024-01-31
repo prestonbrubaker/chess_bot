@@ -178,10 +178,10 @@ def main():
         # Determine the game outcome
         if board.result() == "1-0":
             wins += 1
-            print("CNN wins")
+            #print("CNN wins")
         elif board.result() == "0-1":
             losses += 1
-            print("Random bot wins")
+            #print("Random bot wins")
         else:
             draws += 1
             print("Draw")
