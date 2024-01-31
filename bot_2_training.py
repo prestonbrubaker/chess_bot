@@ -61,7 +61,7 @@ class ChessCNN(nn.Module):
 
         x = self.pool(F.relu(self.conv1(x)))
         # Debugging print
-        print(f"After first convolution shape: {x.shape}")
+        #print(f"After first convolution shape: {x.shape}")
         # Apply convolutional and pooling layers
         x = self.pool(F.relu(self.conv2(x)))
         x = self.pool(F.relu(self.conv3(x)))
