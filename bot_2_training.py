@@ -33,7 +33,7 @@ class ChessDataset(Dataset):
         return len(self.board_data)
 
 # Load data
-dataset = ChessDataset('board_data.txt', 'score_data.txt')
+dataset = ChessDataset('board_data.txt', 'score_data_per_turn.txt')
 
 # Define data loaders
 batch_size = 300
