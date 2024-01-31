@@ -92,6 +92,11 @@ for epoch in range(num_epochs):
         inputs, labels = inputs.to(device), labels.to(device)  # Move data to GPU
         inputs = inputs.float()  # Convert input to Float data type
         labels = labels.float()  # Convert labels to Float data type
+
+        # Debugging print statement
+        if batch_idx == 0:  # Print for the first batch of each epoch
+            print(f"Epoch {epoch+1}, Batch {batch_idx+1}, Input shape: {inputs.shape}, Labels shape: {labels.shape}", flush=True)
+        
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, labels)
